@@ -1,7 +1,7 @@
 # Проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Vladimir Rybin](https://up.htmlacademy.ru/ecmascript/13/user/213048).
-* Наставник: `Неизвестно`.
+* Наставник: Олег Глущенко.
 
 ---
 
