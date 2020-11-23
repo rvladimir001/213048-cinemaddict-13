@@ -1,4 +1,3 @@
-import {createFilmCard} from "./film-card.js"
 export const createElementFilm = (FILM_COUNT)=> {
     let films = ``
     for (let i = 1; i <= FILM_COUNT; i++) {
