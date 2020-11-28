@@ -1,3 +1,3 @@
-export const createFooterStat = ()=> {
-  return (`123`);
+export const createFooterStat = (n)=> {
+  return (`${n}`);
 };
