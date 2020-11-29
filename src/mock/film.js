@@ -1,4 +1,5 @@
-import {getRandomInteger, generateRating, generateReleaseDate, generateMockData, generateNameFilm} from "../utils.js";
+import {nanoid} from 'nanoid';
+import {getRandomInteger, generateRating, generateReleaseDate, generateMockData, generateNameFilm} from "./utils.js";
 
 const generatedDescription = () => {
   let quantity = getRandomInteger(1, 5);
@@ -125,6 +126,7 @@ const category = [
 
 export const generateFilm = () => {
   return {
+    id: nanoid(),
     name: generateNameFilm(films),
     poster: generateMockData(0, posters),
     rating: generateRating(),
@@ -138,6 +140,7 @@ export const generateFilm = () => {
     description: generatedDescription(),
     favoritesStatus: Boolean(getRandomInteger()),
     watchlistStatus: Boolean(getRandomInteger()),
+    historyStatus: Boolean(getRandomInteger()),
     alreadyWatchedSatus: Boolean(getRandomInteger()),
     commentQuantity: getRandomInteger(0, 5),
     category: generateMockData(0, category),
@@ -177,6 +180,7 @@ const dates = [
 
 export const generateComment = function () {
   return {
+    id: nanoid(),
     author: generateMockData(0, authors),
     emoji: generateMockData(0, emojiList),
     commentDate: generateMockData(0, dates),
