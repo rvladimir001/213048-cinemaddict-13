@@ -10,15 +10,14 @@ import {createComments} from "./view/film-comments.js";
 
 const FILM_COUNT = 15;
 const COMMENTS_COUNT = 5;
-const ALL_FILMS = new Array(FILM_COUNT).fill().map(generateFilm);
-const allFilmsForView = ALL_FILMS.slice();
+let allFilmsForView = new Array(FILM_COUNT).fill().map(generateFilm);
 let filmCountForList = 5;
 
 const filmsSort = () => {
   return {
-    watchlist: ALL_FILMS.filter((item) => item.watchlistStatus),
-    history: ALL_FILMS.filter((item) => item.historyStatus),
-    favorites: ALL_FILMS.filter((item) => item.favoritesStatus),
+    watchlist: allFilmsForView.filter((item) => item.watchlistStatus),
+    history: allFilmsForView.filter((item) => item.historyStatus),
+    favorites: allFilmsForView.filter((item) => item.favoritesStatus),
   };
 };
 const filmsSorted = filmsSort();
@@ -53,7 +52,6 @@ const siteHeaderProfile = siteHeaderElement.querySelector(`.header__profile`);
 render(siteHeaderProfile, createHeaderProfileTemplate(), `beforeend`);
 render(siteMainElement, createListEmptyTemplate(filmsSorted.watchlist.length, filmsSorted.history.length, filmsSorted.favorites.length), `beforeend`);
 render(siteMainElement, createSortTemplate(), `beforeend`);
-
 
 const allComments = new Array(COMMENTS_COUNT).fill().map(generateComment);
 const totalFilms = allFilmsForView.length;
