@@ -13,7 +13,7 @@ export const createFilmCard = (film) => {
     </p>
     <img src="./images/posters/${film.poster}" alt="" class="film-card__poster">
     <p class="film-card__description">${film.description.join(`. `).slice(0, 65)}...</p>
-    <a class="film-card__comments">${film.commentQuantity} comments</a>
+    <a class="film-card__comments">${film.comments.length} comments</a>
     <div class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${setСlassActive(film.historyStatus)}" type="button">Add to watchlist</button>
     <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${setСlassActive(film.watchlistStatus)}" type="button">Mark as watched</button>

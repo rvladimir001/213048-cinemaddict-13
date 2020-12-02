@@ -4,48 +4,48 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 export const generateRating = () => {
-  let integerNum = getRandomInteger(1, 10);
-  let decimalNum = getRandomInteger(0, 10);
-  return integerNum === 10 ? `${integerNum}.0` : `${integerNum}.${decimalNum}`;
+  const integerNum = getRandomInteger(10, 100);
+  return integerNum / 10;
 };
 
 export const generateReleaseDate = () => {
   return new Date(getRandomInteger(1930, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31));
 };
 
+const months = [
+  `January`,
+  `February`,
+  `March`,
+  `April`,
+  `May`,
+  `June`,
+  `July`,
+  `August`,
+  `September`,
+  `October`,
+  `November`,
+  `December`,
+];
+
 export const generateReleaseDateDetails = () => {
-  let randomDate = generateReleaseDate();
-  let months = [
-    `January`,
-    `February`,
-    `March`,
-    `April`,
-    `May`,
-    `June`,
-    `July`,
-    `August`,
-    `September`,
-    `October`,
-    `November`,
-    `December`,
-  ];
+  const randomDate = generateReleaseDate();
   return `${randomDate.getDate()} ${months[randomDate.getMonth()]} ${randomDate.getFullYear()}`;
 };
 
 export const getRandomElementsFromArray = (list) => {
-  let data = [];
-  let temporaryList = list.slice();
-  let n = getRandomInteger(1, temporaryList.length - 1);
+  const data = [];
+  const temporaryList = list.slice();
+  const n = getRandomInteger(1, temporaryList.length - 1);
   for (let i = 0; i <= n; i++) {
-    let index = getRandomInteger(0, temporaryList.length - 1);
-    let item = temporaryList.splice(index, 1);
+    const index = getRandomInteger(0, temporaryList.length - 1);
+    const item = temporaryList.splice(index, 1)[0];
     data.push(item);
   }
   return data;
 };
 
-export const getRandomOneElementsFromArray = (list) => {
-  let index = getRandomInteger(0, list.length - 1);
+export const getRandomOneElementFromArray = (list) => {
+  const index = getRandomInteger(0, list.length - 1);
   return list[index];
 };
 
