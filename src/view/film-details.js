@@ -6,7 +6,7 @@ export const createFilmDetailsElement = (film) => {
     }
     return genresTemlate;
   };
-  const setCheckboxSrartus = (status) => {
+  const setCheckboxStatus = (status) => {
     return status ? `checked` : ``;
   };
   return (
@@ -68,19 +68,19 @@ export const createFilmDetailsElement = (film) => {
               </table>
 
               <p class="film-details__film-description">
-                ${film.description.join(`. `) + `.`}
+                ${film.description}
               </p>
             </div>
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${setCheckboxSrartus(film.watchlistStatus)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${setCheckboxStatus(film.watchlistStatus)}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${setCheckboxSrartus(film.alreadyWatchedSatus)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${setCheckboxStatus(film.alreadyWatchedSatus)}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched film-card__controls-item--active">Already watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${setCheckboxSrartus(film.favoritesStatus)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${setCheckboxStatus(film.favoritesStatus)}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>

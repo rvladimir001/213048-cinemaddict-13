@@ -5,10 +5,10 @@ import {createFilmCard} from "./view/film-card.js";
 import {createButtonShowMore} from "./view/button-show-more.js";
 import {createFooterStat} from "./view/footer-stat.js";
 import {createFilmDetailsElement} from "./view/film-details.js";
-import {allFilmsForView} from "./mock/film";
 import {createComments} from "./view/film-comments.js";
+import {allFilmsForView} from "./mock/film";
 
-let filmCountForList = 5;
+const FILM_COUNT_FOR_LIST = 5;
 
 const filmsSort = () => {
   return {
@@ -24,9 +24,9 @@ const render = (container, template, place) => {
 };
 
 const renderFilmsList = (count, films, createElementMethod) => {
-  let siteFilmListElement = siteMainElement.querySelector(`.films-list__container`);
+  const siteFilmListElement = siteMainElement.querySelector(`.films-list__container`);
   for (let i = 0; i < count; i++) {
-    let filmItem = films.pop();
+    const filmItem = films.pop();
     render(siteFilmListElement, createElementMethod(filmItem), `beforeend`);
   }
 };
@@ -52,17 +52,18 @@ render(siteMainElement, createSortTemplate(), `beforeend`);
 
 const totalFilms = allFilmsForView.length;
 const firstFilm = allFilmsForView.slice(-1);
-renderFilmsList(filmCountForList, allFilmsForView, createFilmCard);
+renderFilmsList(FILM_COUNT_FOR_LIST, allFilmsForView, createFilmCard);
 
 if (allFilmsForView.length > 0) {
   render(siteMainElement, createButtonShowMore(), `beforeend`);
   const showButton = siteMainElement.querySelector(`.films-list__show-more`);
   showButton.addEventListener(`click`, (evt) => {
     evt.preventDefault();
-    if (filmCountForList > allFilmsForView.length) {
-      filmCountForList = allFilmsForView.length;
+    let countCardsForRender = FILM_COUNT_FOR_LIST;
+    if (FILM_COUNT_FOR_LIST > allFilmsForView.length) {
+      countCardsForRender = allFilmsForView.length;
     }
-    renderFilmsList(filmCountForList, allFilmsForView, createFilmCard);
+    renderFilmsList(countCardsForRender, allFilmsForView, createFilmCard);
     if (allFilmsForView.length === 0) {
       showButton.remove();
     }
