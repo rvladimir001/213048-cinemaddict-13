@@ -1,22 +1,24 @@
 import {nanoid} from 'nanoid';
-import {getRandomInteger, generateRating, generateReleaseDate, generateMockData, generateNameFilm} from "./utils.js";
+import {
+  generateRating,
+  generateReleaseDate,
+  generateReleaseDateDetails,
+  getRandomElementsFromArray,
+  getRandomOneElementFromArray,
+  getRandomBoolean,
+  generatedArrDescription,
+} from "./utils.js";
+import {generateComments} from './comment.js';
 
-const generatedDescription = () => {
-  let quantity = getRandomInteger(1, 5);
-  let description = ``;
-  let descriptionList = [
-    `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-    `Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.`,
-    `Aliquam id orci ut lectus varius viverra.`,
-    `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-    `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.`,
-  ];
-  for (let i = 0; i <= quantity; i++) {
-    description += descriptionList[i];
-  }
-  return description;
-};
+const FILM_COUNT = 15;
 
+const TEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum
+pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget,
+sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae,
+sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam,
+eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.
+Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 
 const films = [
   `The Dance of Life`,
@@ -94,6 +96,7 @@ const actors = [
   `Edward Norton`,
   `Joaquin Phoenix`,
 ];
+
 const country = [
   `USA`,
   `Germany`,
@@ -124,66 +127,28 @@ const category = [
   `18+`,
 ];
 
-export const generateFilm = () => {
+const generateFilm = () => {
   return {
     id: nanoid(),
-    name: generateNameFilm(films),
-    poster: generateMockData(0, posters),
+    name: getRandomOneElementFromArray(films),
+    poster: getRandomOneElementFromArray(posters),
     rating: generateRating(),
-    director: generateMockData(0, directors),
-    writers: generateMockData(getRandomInteger(1, 2), writers),
-    actors: generateMockData(getRandomInteger(2, 4), actors),
+    director: getRandomOneElementFromArray(directors),
+    writers: getRandomElementsFromArray(writers),
+    actors: getRandomElementsFromArray(actors),
     releaseDate: generateReleaseDate(),
-    runtime: generateMockData(0, runtime),
-    country: generateMockData(0, country),
-    genres: generateMockData(getRandomInteger(0, 1), genres),
-    description: generatedDescription(),
-    favoritesStatus: Boolean(getRandomInteger()),
-    watchlistStatus: Boolean(getRandomInteger()),
-    historyStatus: Boolean(getRandomInteger()),
-    alreadyWatchedSatus: Boolean(getRandomInteger()),
-    commentQuantity: getRandomInteger(0, 5),
-    category: generateMockData(0, category),
+    releaseFullDate: generateReleaseDateDetails(),
+    runtime: getRandomOneElementFromArray(runtime),
+    country: getRandomElementsFromArray(country),
+    genres: getRandomElementsFromArray(genres),
+    description: getRandomElementsFromArray(generatedArrDescription(TEXT)),
+    favoritesStatus: getRandomBoolean(),
+    watchlistStatus: getRandomBoolean(),
+    historyStatus: getRandomBoolean(),
+    alreadyWatchedSatus: getRandomBoolean(),
+    comments: generateComments(),
+    category: getRandomOneElementFromArray(category),
   };
 };
 
-const authors = [
-  `John Doe`,
-  `Tim Macoveev`,
-  `John Snow`,
-  `Ned Stark`,
-];
-
-const emojiList = [
-  `angry.png`,
-  `puke.png`,
-  `sleeping.png`,
-  `smile.png`,
-];
-
-const comments = [
-  `Interesting setting and a good cast`,
-  `Very very old. Meh`,
-  `Booooooooooring`,
-  `Almost two hours? Seriously?`,
-];
-
-const dates = [
-  `2 days ago`,
-  `3 days ago`,
-  `5 days ago`,
-  `Today `,
-  `2019/12/31 23:59`,
-  `2019/12/29 15:13`,
-  `2019/11/25 23:59`,
-];
-
-export const generateComment = function () {
-  return {
-    id: nanoid(),
-    author: generateMockData(0, authors),
-    emoji: generateMockData(0, emojiList),
-    commentDate: generateMockData(0, dates),
-    content: generateMockData(0, comments),
-  };
-};
+export const allFilmsForView = new Array(FILM_COUNT).fill().map(generateFilm);

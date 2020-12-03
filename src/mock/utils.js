@@ -4,27 +4,55 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 export const generateRating = () => {
-  let integerNum = getRandomInteger(0, 10);
-  let decimalNum = getRandomInteger(0, 10);
-  return integerNum === 10 ? `${integerNum}.0` : `${integerNum}.${decimalNum}`;
+  const integerNum = getRandomInteger(10, 100);
+  return integerNum / 10;
 };
 
 export const generateReleaseDate = () => {
   return new Date(getRandomInteger(1930, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31));
 };
 
-export const generateMockData = (n, list) => {
-  let data = [];
+const months = [
+  `January`,
+  `February`,
+  `March`,
+  `April`,
+  `May`,
+  `June`,
+  `July`,
+  `August`,
+  `September`,
+  `October`,
+  `November`,
+  `December`,
+];
+
+export const generateReleaseDateDetails = () => {
+  const randomDate = generateReleaseDate();
+  return `${randomDate.getDate()} ${months[randomDate.getMonth()]} ${randomDate.getFullYear()}`;
+};
+
+export const getRandomElementsFromArray = (list) => {
+  const data = [];
+  const temporaryList = list.slice();
+  const n = getRandomInteger(1, temporaryList.length - 1);
   for (let i = 0; i <= n; i++) {
-    let index = getRandomInteger(0, list.length - 1);
-    let item = list[index];
+    const index = getRandomInteger(0, temporaryList.length - 1);
+    const item = temporaryList.splice(index, 1)[0];
     data.push(item);
   }
   return data;
 };
 
-export const generateNameFilm = (list) => {
-  let index = getRandomInteger(0, list.length - 1);
-  let item = list.splice(index, 1)[0];
-  return item;
+export const getRandomOneElementFromArray = (list) => {
+  const index = getRandomInteger(0, list.length - 1);
+  return list[index];
+};
+
+export const getRandomBoolean = () => {
+  return Boolean(Math.round(Math.random()));
+};
+
+export const generatedArrDescription = (text) => {
+  return text.split(`.`);
 };
