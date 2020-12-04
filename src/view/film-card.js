@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 export const createFilmCard = (film) => {
   const setСlassActive = (status) => {
     return status ? `film-card__controls-item--active` : ``;
@@ -22,3 +24,25 @@ export const createFilmCard = (film) => {
   </article>`
   );
 };
+
+export default class FilmCard {
+  constructor(film) {
+    this._element = null;
+    this._film = film;
+  }
+
+  getTemplate() {
+    return createFilmCard(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

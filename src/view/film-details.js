@@ -1,4 +1,6 @@
-export const createFilmDetailsElement = (film) => {
+import {createElement} from "../utils";
+
+const createFilmDetailsElement = (film) => {
   const createGenresTemlate = (genres) => {
     let genresTemlate = ``;
     for (const item of genres) {
@@ -19,7 +21,6 @@ export const createFilmDetailsElement = (film) => {
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
               <img class="film-details__poster-img" src="./images/posters/${film.poster}" alt="">
-
               <p class="film-details__age">${film.category}</p>
             </div>
 
@@ -92,3 +93,25 @@ export const createFilmDetailsElement = (film) => {
     </section>`
   );
 };
+
+export default class FilmDetailsElement {
+  constructor(film) {
+    this._element = null;
+    this._film = film;
+  }
+
+  getTemplate() {
+    return createFilmDetailsElement(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

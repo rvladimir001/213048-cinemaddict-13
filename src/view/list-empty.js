@@ -1,4 +1,6 @@
-export const createListEmptyTemplate = (watchlistCount, HistoryCount, favoritesCount)=> {
+import {createElement} from "../utils";
+
+const createListEmptyTemplate = (watchlistCount, HistoryCount, favoritesCount) => {
   return (
     `<nav class="main-navigation">
       <div class="main-navigation__items">
@@ -11,3 +13,27 @@ export const createListEmptyTemplate = (watchlistCount, HistoryCount, favoritesC
     </nav>`
   );
 };
+
+export default class ListEmpty {
+  constructor(watchlistCount, HistoryCount, favoritesCount) {
+    this._element = null;
+    this._watchlistCount = watchlistCount;
+    this._HistoryCount = HistoryCount;
+    this._favoritesCount = favoritesCount;
+  }
+
+  getTemplate() {
+    return createListEmptyTemplate(this._watchlistCount, this._HistoryCount, this._favoritesCount);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
