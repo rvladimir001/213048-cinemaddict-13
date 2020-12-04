@@ -6,7 +6,7 @@ import {
   getRandomElementsFromArray,
   getRandomOneElementFromArray,
   getRandomBoolean,
-  generatedArrDescription,
+  generatedDescription,
 } from "./utils.js";
 import {generateComments} from './comment.js';
 
@@ -141,7 +141,7 @@ const generateFilm = () => {
     runtime: getRandomOneElementFromArray(runtime),
     country: getRandomElementsFromArray(country),
     genres: getRandomElementsFromArray(genres),
-    description: getRandomElementsFromArray(generatedArrDescription(TEXT)),
+    description: generatedDescription(TEXT),
     favoritesStatus: getRandomBoolean(),
     watchlistStatus: getRandomBoolean(),
     historyStatus: getRandomBoolean(),
