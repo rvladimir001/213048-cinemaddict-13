@@ -53,6 +53,7 @@ export const getRandomBoolean = () => {
   return Boolean(Math.round(Math.random()));
 };
 
-export const generatedArrDescription = (text) => {
-  return text.split(`.`);
+export const generatedDescription = (text) => {
+  const listSentence = getRandomElementsFromArray(text.split(`.`));
+  return listSentence.join(`. `) + `.`;
 };

@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 export const createComments = (comments) => {
   const createCommentTemlate = (commentsList) => {
     let commentTemlate = ``;
@@ -55,3 +57,25 @@ export const createComments = (comments) => {
             </div>
           </section>`;
 };
+
+export default class Comments {
+  constructor(comments) {
+    this._element = null;
+    this._comments = comments;
+  }
+
+  getTemplate() {
+    return createComments(this._comments);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
