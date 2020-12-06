@@ -23,9 +23,18 @@ const filmsSort = () => {
 const filmsSorted = filmsSort();
 
 const closeFilmDetails = (filmDetails, siteBody) => {
+  filmDetails.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, () => closeFilmDetails);
   filmDetails.getElement().remove();
   filmDetails.removeElement();
   siteBody.classList.remove(`hide-overflow`);
+};
+
+const closeFilmDetailsEsc = (evt, filmDetails, siteBody) => {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    closeFilmDetails(filmDetails, siteBody);
+    document.removeEventListener(`keydown`, ()=> closeFilmDetailsEsc(evt, filmDetails, siteBody));
+  }
 };
 
 const showFilmDetails = (film, siteBody) => {
@@ -36,10 +45,7 @@ const showFilmDetails = (film, siteBody) => {
   filmDetails.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, () => closeFilmDetails(filmDetails, siteBodyElement));
   siteBody.classList.add(`hide-overflow`);
   document.addEventListener(`keydown`, (evt) => {
-    if (evt.key === `Escape`) {
-      evt.preventDefault();
-      closeFilmDetails(filmDetails, siteBodyElement);
-    }
+    closeFilmDetailsEsc(evt, filmDetails, siteBody);
   });
 };
 
