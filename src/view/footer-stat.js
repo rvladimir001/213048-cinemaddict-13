@@ -1,27 +1,16 @@
-import {createElement} from "../utils";
+import Abstract from "./abstract";
 
-const createFooterStat = (n)=> {
+const createFooterStat = (n) => {
   return (`${n}`);
 };
 
-export default class FooterStat {
+export default class FooterStat extends Abstract {
   constructor(n) {
-    this._element = null;
+    super();
     this._n = n;
   }
 
   getTemplate() {
     return createFooterStat(this._n);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

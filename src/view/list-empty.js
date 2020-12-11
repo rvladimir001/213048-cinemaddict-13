@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import Abstract from "./abstract";
 
 const createListEmptyTemplate = (watchlistCount, HistoryCount, favoritesCount) => {
   return (
@@ -14,9 +14,9 @@ const createListEmptyTemplate = (watchlistCount, HistoryCount, favoritesCount) =
   );
 };
 
-export default class ListEmpty {
+export default class ListEmpty extends Abstract {
   constructor(watchlistCount, HistoryCount, favoritesCount) {
-    this._element = null;
+    super();
     this._watchlistCount = watchlistCount;
     this._HistoryCount = HistoryCount;
     this._favoritesCount = favoritesCount;
@@ -24,16 +24,5 @@ export default class ListEmpty {
 
   getTemplate() {
     return createListEmptyTemplate(this._watchlistCount, this._HistoryCount, this._favoritesCount);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
