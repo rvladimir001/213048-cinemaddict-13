@@ -145,7 +145,7 @@ const generateFilm = () => {
     favorite: getRandomBoolean(),
     watchlist: getRandomBoolean(),
     history: getRandomBoolean(),
-    already: getRandomBoolean(),
+    watched: getRandomBoolean(),
     comments: generateComments(),
     category: getRandomOneElementFromArray(category),
   };

@@ -78,7 +78,7 @@ const createFilmDetailsElement = (film) => {
             <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${setCheckboxStatus(film.watchlist)}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${setCheckboxStatus(film.already)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${setCheckboxStatus(film.watched)}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched film-card__controls-item--active">Already watched</label>
 
             <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${setCheckboxStatus(film.favorite)}>

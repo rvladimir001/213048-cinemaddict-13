@@ -117,12 +117,11 @@ export default class MovieList {
     //console.log('filmDetails', filmDetails.getElement().querySelector(`.film-details__controls`))
     filmDetails.getElement().querySelector(`.film-details__controls`).addEventListener(`click`, (evt) => {
       if (evt.target.tagName === `INPUT`) {
-        console.log(evt.target.id);
+        console.log(evt.target.id, film[evt.target.id]);
       }
     });
     document.addEventListener(`keydown`, (evt) => {
       closeFilmDetailsEsc(evt, filmDetails, this._containerBody);
     });
   }
-
 }
