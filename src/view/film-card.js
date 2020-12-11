@@ -17,9 +17,9 @@ export const createFilmCard = (film) => {
     <p class="film-card__description">${film.description.slice(0, 65)}...</p>
     <a class="film-card__comments">${film.comments.length} comments</a>
     <div class="film-card__controls">
-    <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${setСlassActive(film.historyStatus)}" type="button">Add to watchlist</button>
-    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${setСlassActive(film.watchlistStatus)}" type="button">Mark as watched</button>
-    <button class="film-card__controls-item button film-card__controls-item--favorite ${setСlassActive(film.favoritesStatus)}" type="button">Mark as favorite</button>
+    <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${setСlassActive(film.history)}" type="button">Add to watchlist</button>
+    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${setСlassActive(film.watchlist)}" type="button">Mark as watched</button>
+    <button class="film-card__controls-item button film-card__controls-item--favorite ${setСlassActive(film.favorite)}" type="button">Mark as favorite</button>
     </div>
   </article>`
   );
