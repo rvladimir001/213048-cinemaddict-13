@@ -5,7 +5,7 @@ import FilmsContainer from "./view/films-container.js";
 import FooterStat from "./view/footer-stat.js";
 import {render, RenderPosition} from "./utils/render.js";
 import {filmsSort} from "./utils/films.js";
-import MovieList from "./presenter/films-presentor.js";
+import MovieList from "./presenter/films-list-presentor.js";
 import {allFilmsForView} from "./mock/film";
 
 const filmsSorted = filmsSort(allFilmsForView);
