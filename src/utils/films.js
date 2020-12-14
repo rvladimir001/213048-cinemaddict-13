@@ -2,16 +2,16 @@ import {remove} from "./render";
 
 export const filmsSort = (allFilmsForView) => {
   return {
-    watchlist: allFilmsForView.filter((item) => item.watchlistStatus),
-    history: allFilmsForView.filter((item) => item.historyStatus),
-    favorites: allFilmsForView.filter((item) => item.favoritesStatus),
+    watchlist: allFilmsForView.filter((item) => item.watchlist),
+    history: allFilmsForView.filter((item) => item.history),
+    favorites: allFilmsForView.filter((item) => item.favorite),
   };
 };
 
-export const closeFilmDetails = (filmDetails, siteBody) => {
+export const closeFilmDetails = (filmDetails) => {
   filmDetails.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, () => closeFilmDetails);
   remove(filmDetails);
-  siteBody.classList.remove(`hide-overflow`);
+  document.body.classList.remove(`hide-overflow`);
 };
 
 export const closeFilmDetailsEsc = (evt, filmDetails, siteBody) => {
