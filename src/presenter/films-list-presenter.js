@@ -19,6 +19,7 @@ export default class MovieList {
     this._filmDetails = null;
     this._allFilms = allFilms;
     this._allFilmsForView = null;
+    this._countCardInPage = 5;
   }
 
   init() {
@@ -34,7 +35,7 @@ export default class MovieList {
       this._cardFilmComponent.setClickHandler(() => this._showFilmDetails(filmItem));
       this._cardFilmComponent.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, (evt) => {
         if (evt.target.tagName === `BUTTON`) {
-          this._changeData(Object.assign({}, filmItem, {[evt.target.id]: !filmItem[evt.target.id]}));
+          this._changeData(Object.assign({}, filmItem, {[evt.target.name]: !filmItem[evt.target.name]}));
         }
       });
     }
@@ -44,8 +45,9 @@ export default class MovieList {
     if (this._allFilmsForView.length > 0) {
       this._renderFilmsList(this._renderFilmsCount);
       this._renderShowButton();
+      let countCardsForRender = null;
       this._buttonShowMore.setClickHandler(() => {
-        let countCardsForRender = this._renderFilmsCount;
+        countCardsForRender = this._renderFilmsCount;
         if (this._renderFilmsCount > this._allFilmsForView.length) {
           countCardsForRender = this._allFilmsForView.length;
         }
@@ -53,6 +55,7 @@ export default class MovieList {
         if (this._allFilmsForView.length === 0) {
           remove(this._buttonShowMore);
         }
+        this._countCardInPage += countCardsForRender;
       });
     } else {
       this._renderNoMoviesBlock();
@@ -68,6 +71,9 @@ export default class MovieList {
   }
 
   _showFilmDetails(filmItem) {
+    if (this._countCardInPage !== 0) {
+      this._renderFilmsCount = this._countCardInPage;
+    }
     if (this._filmDetailsStatus) {
       this._filmDetailsStatus = false;
       this._renderFilmDetails(filmItem);
@@ -90,7 +96,7 @@ export default class MovieList {
     });
     this._filmDetails.getElement().querySelector(`.film-details__controls`).addEventListener(`change`, (evt) => {
       if (evt.target.tagName === `INPUT`) {
-        this._changeData(Object.assign({}, filmItem, {[evt.target.id]: !filmItem[evt.target.id]}));
+        this._changeData(Object.assign({}, filmItem, {[evt.target.name]: !filmItem[evt.target.name]}));
       }
     });
   }

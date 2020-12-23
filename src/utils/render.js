@@ -31,8 +31,6 @@ export const createElement = (template) => {
 };
 
 export const replace = (newChild, oldChild) => {
-  console.log('newChild', newChild)
-  console.log('oldChild', oldChild)
   if (oldChild instanceof Abstract) {
     oldChild = oldChild.getElement();
   }
