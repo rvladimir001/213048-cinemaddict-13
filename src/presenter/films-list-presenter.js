@@ -15,21 +15,25 @@ export default class MovieList {
   constructor(container, allFilms) {
     this._container = container;
     this._renderFilmsCount = FILM_COUNT_FOR_LIST;
-    this._containerFilms = new FilmsContainer();
+    this._containerFilmsListComponent = new FilmsContainer();
+    this._containerFilms = null;
     this._sortMenu = new SortMenu();
     this._buttonShowMore = new ButtonShowMore();
     this._nomovies = new NoMoviesBlock();
     this._filmDetailsStatus = true;
     this._filmDetails = null;
-    this._allFilms = allFilms;
+    this._allFilms = allFilms.slice();
+    this._defaultAllFilms = allFilms;
+    this._typeSort = `default`;
     this._allFilmsForView = null;
     this._countCardInPage = 5;
   }
 
   init() {
     this._allFilmsForView = this._allFilms.slice();
-    render(this._container, this._sortMenu, RenderPosition.BEFOREEND);
-    render(this._container, this._containerFilms, RenderPosition.BEFOREEND);
+    this._renderSort();
+    render(this._container, this._containerFilmsListComponent, RenderPosition.BEFOREEND);
+    this._containerFilms = this._container.querySelector(`.films-list__container`);
     this._renderFilmsBlock();
   }
 
@@ -130,4 +134,32 @@ export default class MovieList {
       this._containerFilms.removeChild(this._containerFilms.firstChild);
     }
   }
+
+  _renderSort() {
+    render(this._container, this._sortMenu, RenderPosition.BEFOREEND);
+    this._sortMenu.setClickHandler((evt) => this._handleSortClick(evt));
+  }
+
+  _handleSortClick(evt) {
+    this._sortMenu.getActiveLink().classList.remove(`sort__button--active`);
+    evt.target.classList.add(`sort__button--active`);
+    const typeSort = evt.target.getAttribute(`data-sort`);
+    if (this._typeSort !== typeSort) {
+      this._sortingFilms(typeSort);
+      this._typeSort = typeSort;
+    }
+  }
+
+  _sortingFilms(typeSort) {
+    if (typeSort === `rating`) {
+      this._allFilms.sort((a, b) => a.rating > b.rating ? 1 : -1);
+    } else if (typeSort === `date`) {
+      this._allFilms.sort((a, b) => a.releaseDate > b.releaseDate ? 1 : -1);
+    } else {
+      this._allFilms = this._defaultAllFilms.slice();
+    }
+    this._clearFilmList();
+    this.init();
+  }
+
 }
