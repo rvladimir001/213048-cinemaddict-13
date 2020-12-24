@@ -1,7 +1,5 @@
 import ListEmpty from "./view/list-empty.js";
 import HeaderProfile from "./view/header-profile.js";
-import SortMenu from "./view/sort-menu.js";
-import FilmsContainer from "./view/films-container.js";
 import FooterStat from "./view/footer-stat.js";
 import {render, RenderPosition} from "./utils/render.js";
 import {filmsSort} from "./utils/films.js";
