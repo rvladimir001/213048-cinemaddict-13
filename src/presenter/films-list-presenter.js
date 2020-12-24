@@ -87,7 +87,7 @@ export default class MovieList {
   _renderFilmDetails(filmItem) {
     this._filmDetails = new FilmDetailsElement(filmItem);
     this._comments = new Comments(filmItem.comments);
-    render(this._container, this._filmDetails, RenderPosition.BEFOREEND);
+    render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
     this._filmDetails.setClickHandler(() => this._close());
     document.body.classList.add(`hide-overflow`);
