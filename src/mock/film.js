@@ -144,7 +144,6 @@ const generateFilm = () => {
     description: generatedDescription(TEXT),
     favorite: getRandomBoolean(),
     watchlist: getRandomBoolean(),
-    history: getRandomBoolean(),
     watched: getRandomBoolean(),
     comments: generateComments(),
     category: getRandomOneElementFromArray(category),
