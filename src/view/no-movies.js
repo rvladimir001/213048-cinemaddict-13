@@ -6,7 +6,7 @@ const createNoMoviesBlock = () => {
   );
 };
 
-export default class NoMoviesBlock extends Abstract {
+export class NoMoviesBlock extends Abstract {
   getTemplate() {
     return createNoMoviesBlock();
   }

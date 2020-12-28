@@ -6,7 +6,7 @@ const createButtonShowMore = () => {
   );
 };
 
-export default class ButtonShowMore extends Abstract {
+export class ButtonShowMore extends Abstract {
   constructor() {
     super();
     this._clickHandler = this._clickHandler.bind(this);

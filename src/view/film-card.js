@@ -27,7 +27,7 @@ export const createFilmCard = (film) => {
   );
 };
 
-export default class FilmCard extends Abstract {
+export class FilmCard extends Abstract {
   constructor(film) {
     super();
     this._film = film;

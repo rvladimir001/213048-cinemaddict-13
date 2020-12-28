@@ -91,7 +91,7 @@ const createFilmDetailsElement = (film) => {
   );
 };
 
-export default class FilmDetailsElement extends Abstract {
+export class FilmDetailsElement extends Abstract {
   constructor(film) {
     super();
     this._film = film;
