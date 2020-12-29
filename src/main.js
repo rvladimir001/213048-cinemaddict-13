@@ -14,7 +14,7 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteFooterElement = document.querySelector(`.footer`);
 
 render(siteHeaderElement, new HeaderProfile(), RenderPosition.BEFOREEND);
-render(siteMainElement, new ListEmpty(filmsSorted.watchlist.length, filmsSorted.history.length, filmsSorted.favorites.length), RenderPosition.BEFOREEND);
+render(siteMainElement, new ListEmpty(filmsSorted.watchlist.length, filmsSorted.watched.length, filmsSorted.favorites.length), RenderPosition.BEFOREEND);
 render(siteMainElement, new SortMenu(), RenderPosition.BEFOREEND);
 render(siteMainElement, new FilmsContainer(), RenderPosition.BEFOREEND);
 

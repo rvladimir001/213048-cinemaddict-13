@@ -3,7 +3,7 @@ import {remove} from "./render";
 export const filmsSort = (allFilmsForView) => {
   return {
     watchlist: allFilmsForView.filter((item) => item.watchlist),
-    history: allFilmsForView.filter((item) => item.history),
+    watched: allFilmsForView.filter((item) => item.watched),
     favorites: allFilmsForView.filter((item) => item.favorite),
   };
 };
