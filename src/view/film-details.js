@@ -97,6 +97,7 @@ export class FilmDetailsElement extends Abstract {
     this._film = film;
     this._clickHandler = this._clickHandler.bind(this);
     this._clickHandlerEditStatus = this._clickHandlerEditStatus.bind(this);
+    this._addClass();
   }
 
   getTemplate() {
@@ -123,4 +124,7 @@ export class FilmDetailsElement extends Abstract {
     this.getElement().querySelector(`.film-details__controls`).addEventListener(`change`, this._clickHandlerEditStatus);
   }
 
+  _addClass() {
+    document.body.classList.add(`hide-overflow`);
+  }
 }
