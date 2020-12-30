@@ -29,15 +29,11 @@ export default class MovieList {
 
   _renderFilmsList(count) {
     for (let i = 0; i < count; i++) {
-      const filmItem = this._allFilmsForView.pop();
+      let filmItem = this._allFilmsForView.pop();
       this._cardFilmComponent = new FilmCardView(filmItem);
       render(this._containerFilms, this._cardFilmComponent, RenderPosition.BEFOREEND);
       this._cardFilmComponent.setClickHandler(() => this._showFilmDetails(filmItem));
-      this._cardFilmComponent.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, (evt) => {
-        if (evt.target.tagName === `BUTTON`) {
-          this._changeData(Object.assign({}, filmItem, {[evt.target.name]: !filmItem[evt.target.name]}));
-        }
-      });
+      this._cardFilmComponent.setClickHandlerEditStatus((evt) => this._editFilm(evt, filmItem));
     }
   }
 
@@ -94,11 +90,13 @@ export default class MovieList {
     document.addEventListener(`keydown`, (evt) => {
       this._closeEsc(evt, this._filmDetails);
     });
-    this._filmDetails.getElement().querySelector(`.film-details__controls`).addEventListener(`change`, (evt) => {
-      if (evt.target.tagName === `INPUT`) {
-        this._changeData(Object.assign({}, filmItem, {[evt.target.name]: !filmItem[evt.target.name]}));
-      }
-    });
+    this._filmDetails.setClickHandlerEditStatus((evt) => this._editFilm(evt, filmItem));
+  }
+
+  _editFilm(evt, filmItem) {
+    if (evt.target.tagName === `INPUT` || evt.target.tagName === `BUTTON`) {
+      this._changeData(Object.assign({}, filmItem, {[evt.target.name]: !filmItem[evt.target.name]}));
+    }
   }
 
   _changeData(updatedFilm) {

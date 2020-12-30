@@ -32,6 +32,7 @@ export class FilmCard extends Abstract {
     super();
     this._film = film;
     this._clickHandler = this._clickHandler.bind(this);
+    this._clickHandlerEditStatus = this._clickHandlerEditStatus.bind(this);
   }
 
   getTemplate() {
@@ -47,8 +48,14 @@ export class FilmCard extends Abstract {
     this._callback.click = callback;
     this.getElement().querySelector(`.film-card-active`).addEventListener(`click`, this._clickHandler);
   }
-  setClickHandlerControl(callback) {
-    this._callback.click = callback;
-    this.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, this._clickHandler);
+
+  _clickHandlerEditStatus(evt) {
+    evt.preventDefault();
+    this._callback.editClick(evt);
+  }
+
+  setClickHandlerEditStatus(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, this._clickHandlerEditStatus);
   }
 }

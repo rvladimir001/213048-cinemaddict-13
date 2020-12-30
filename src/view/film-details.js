@@ -96,6 +96,7 @@ export class FilmDetailsElement extends Abstract {
     super();
     this._film = film;
     this._clickHandler = this._clickHandler.bind(this);
+    this._clickHandlerEditStatus = this._clickHandlerEditStatus.bind(this);
   }
 
   getTemplate() {
@@ -111,4 +112,15 @@ export class FilmDetailsElement extends Abstract {
     this._callback.click = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
   }
+
+  _clickHandlerEditStatus(evt) {
+    evt.preventDefault();
+    this._callback.editClick(evt);
+  }
+
+  setClickHandlerEditStatus(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.film-details__controls`).addEventListener(`change`, this._clickHandlerEditStatus);
+  }
+
 }
