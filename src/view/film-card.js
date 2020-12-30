@@ -36,6 +36,7 @@ export class FilmCard extends Abstract {
   }
 
   getTemplate() {
+    document.body.classList.add(`hide-overflow`);
     return createFilmCard(this._film);
   }
 

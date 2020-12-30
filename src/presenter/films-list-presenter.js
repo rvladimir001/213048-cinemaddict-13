@@ -86,7 +86,6 @@ export default class MovieList {
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
     this._filmDetails.setClickHandler(() => this._close());
-    document.body.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, (evt) => {
       this._closeEsc(evt, this._filmDetails);
     });
