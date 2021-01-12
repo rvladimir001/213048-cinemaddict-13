@@ -20,35 +20,37 @@ export default class MovieList {
     this._allFilms = allFilms;
     this._allFilmsForView = null;
     this._countCardInPage = 5;
+    this._countFilmsForView = null;
   }
 
   init() {
     this._allFilmsForView = this._allFilms.slice();
+    this._countFilmsForView = 0;
     this._renderFilmsBlock();
   }
 
-  _renderFilmsList(count) {
-    for (let i = 0; i < count; i++) {
-      let filmItem = this._allFilmsForView.pop();
-      this._cardFilmComponent = new FilmCardView(filmItem);
+  _renderFilmsList(start, end) {
+    for (let i = start; i < end; i++) {
+      this._cardFilmComponent = new FilmCardView(this._allFilmsForView[i]);
       render(this._containerFilms, this._cardFilmComponent, RenderPosition.BEFOREEND);
-      this._cardFilmComponent.setClickHandler(() => this._showFilmDetails(filmItem));
-      this._cardFilmComponent.setClickHandlerEditStatus((evt) => this._editFilm(evt, filmItem));
+      this._cardFilmComponent.setClickHandler(() => this._showFilmDetails(i));
+      this._cardFilmComponent.setClickHandlerEditStatus((evt) => this._editFilm(evt, i));
     }
   }
 
   _renderFilmsBlock() {
     if (this._allFilmsForView.length > 0) {
-      this._renderFilmsList(this._renderFilmsCount);
+      this._renderFilmsList(0, this._renderFilmsCount);
       this._renderShowButton();
       let countCardsForRender = null;
       this._buttonShowMore.setClickHandler(() => {
         countCardsForRender = this._renderFilmsCount;
-        if (this._renderFilmsCount > this._allFilmsForView.length) {
-          countCardsForRender = this._allFilmsForView.length;
+        this._countFilmsForView = this._countFilmsForView + countCardsForRender;
+        if (this._allFilmsForView.length - (this._countFilmsForView) < this._renderFilmsCount) {
+          countCardsForRender = this._allFilmsForView.length - this._countFilmsForView;
         }
-        this._renderFilmsList(countCardsForRender);
-        if (this._allFilmsForView.length === 0) {
+        this._renderFilmsList(this._countFilmsForView, this._countFilmsForView + countCardsForRender);
+        if (this._allFilmsForView.length === this._countFilmsForView + countCardsForRender) {
           remove(this._buttonShowMore);
         }
         this._countCardInPage += countCardsForRender;
@@ -66,35 +68,38 @@ export default class MovieList {
     render(this._container, this._buttonShowMore, RenderPosition.BEFOREEND);
   }
 
-  _showFilmDetails(filmItem) {
+  _showFilmDetails(index) {
     if (this._countCardInPage !== 0) {
       this._renderFilmsCount = this._countCardInPage;
     }
     if (this._filmDetailsStatus) {
       this._filmDetailsStatus = false;
-      this._renderFilmDetails(filmItem);
+      this._renderFilmDetails(index);
     } else {
       this._filmDetailsStatus = false;
       remove(this._filmDetails);
-      this._renderFilmDetails(filmItem);
+      this._renderFilmDetails(index);
     }
   }
 
-  _renderFilmDetails(filmItem) {
-    this._filmDetails = new FilmDetailsElementView(filmItem);
-    this._comments = new CommentsView(filmItem.comments);
+  _renderFilmDetails(index) {
+    this._filmDetails = new FilmDetailsElementView(this._allFilmsForView[index]);
+    this._comments = new CommentsView(this._allFilmsForView[index].comments);
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
     this._filmDetails.setClickHandler(() => this._close());
     document.addEventListener(`keydown`, (evt) => {
       this._closeEsc(evt, this._filmDetails);
     });
-    this._filmDetails.setClickHandlerEditStatus((evt) => this._editFilm(evt, filmItem));
+
+    this._filmDetails.setClickHandlerEditStatus((evt) => {
+      this._editFilm(evt, index);
+    });
   }
 
-  _editFilm(evt, filmItem) {
+  _editFilm(evt, index) {
     if (evt.target.tagName === `INPUT` || evt.target.tagName === `BUTTON`) {
-      this._changeData(Object.assign({}, filmItem, {[evt.target.name]: !filmItem[evt.target.name]}));
+      this._changeData(Object.assign({}, this._allFilmsForView[index], {[evt.target.name]: !this._allFilmsForView[index][evt.target.name]}));
     }
   }
 
