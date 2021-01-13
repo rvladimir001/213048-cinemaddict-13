@@ -1,9 +1,9 @@
 import {remove, render, RenderPosition, updateItem} from "../utils/render";
-import ButtonShowMore from "../view/button-show-more";
-import NoMoviesBlock from "../view/no-movies";
-import FilmCard from "../view/film-card";
-import FilmDetailsElement from "../view/film-details";
-import Comments from "../view/film-comments";
+import {ButtonShowMore as ButtonShowMoreView} from "../view/button-show-more";
+import {NoMoviesBlock as NoMoviesBlockView} from "../view/no-movies";
+import {FilmCard as FilmCardView} from "../view/film-card";
+import {FilmDetailsElement as FilmDetailsElementView} from "../view/film-details";
+import {Comments as CommentsView} from "../view/film-comments";
 import {closeFilmDetails, closeFilmDetailsEsc} from "../utils/films";
 import SortMenu from "../view/sort-menu";
 import FilmsContainer from "../view/films-container";
@@ -18,8 +18,8 @@ export default class MovieList {
     this._containerFilmsListComponent = new FilmsContainer();
     this._containerFilms = null;
     this._sortMenu = new SortMenu();
-    this._buttonShowMore = new ButtonShowMore();
-    this._nomovies = new NoMoviesBlock();
+    this._buttonShowMore = new ButtonShowMoreView();
+    this._nomovies = new NoMoviesBlockView();
     this._filmDetailsStatus = true;
     this._filmDetails = null;
     this._allFilms = allFilms.slice();
@@ -40,7 +40,7 @@ export default class MovieList {
   _renderFilmsList(count) {
     for (let i = 0; i < count; i++) {
       const filmItem = this._allFilmsForView.pop();
-      this._cardFilmComponent = new FilmCard(filmItem);
+      this._cardFilmComponent = new FilmCardView(filmItem);
       render(this._containerFilms, this._cardFilmComponent, RenderPosition.BEFOREEND);
       this._cardFilmComponent.setClickHandler(() => this._showFilmDetails(filmItem));
       this._cardFilmComponent.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, (evt) => {
@@ -95,12 +95,11 @@ export default class MovieList {
   }
 
   _renderFilmDetails(filmItem) {
-    this._filmDetails = new FilmDetailsElement(filmItem);
-    this._comments = new Comments(filmItem.comments);
-    render(this._container, this._filmDetails, RenderPosition.BEFOREEND);
+    this._filmDetails = new FilmDetailsElementView(filmItem);
+    this._comments = new CommentsView(filmItem.comments);
+    render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
     this._filmDetails.setClickHandler(() => this._close());
-    document.body.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, (evt) => {
       this._closeEsc(evt, this._filmDetails);
     });
