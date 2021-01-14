@@ -14,7 +14,6 @@ export default class SortMenu extends Abstract {
   constructor() {
     super();
     this._clickHandler = this._clickHandler.bind(this);
-    // this._handleSortClick = this._handleSortClick.bind(this);
   }
 
   getTemplate() {
@@ -38,14 +37,4 @@ export default class SortMenu extends Abstract {
       botton.addEventListener(`click`, this._clickHandler);
     }
   }
-
-  // _handleSortClick(evt) {
-  //   evt.preventDefault();
-  //   this._callback.sortClick(evt);
-  // }
-  //
-  // setHandleSortClick(callback) {
-  //   this._callback.sortClick = callback;
-  //   this.getElement().addEventListener(`click`, this._handleSortClick);
-  // }
 }
