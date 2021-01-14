@@ -50,9 +50,11 @@ export default class MovieList {
   _renderFilmsBlock() {
     const filmsCount = this._allFilmsForView.length;
     if (filmsCount > 0) {
-      this._renderFilmsList(0, this._renderFilmsCount);
-      this._renderShowButton();
       let countCardsForRender = null;
+      this._renderFilmsList(0, this._countCardInPage);
+      if (filmsCount > this._countCardInPage) {
+        this._renderShowButton();
+      }
       this._buttonShowMore.setClickHandler(() => {
         countCardsForRender = this._renderFilmsCount;
         this._countFilmsForView = this._countFilmsForView + countCardsForRender;
@@ -60,10 +62,10 @@ export default class MovieList {
           countCardsForRender = filmsCount - this._countFilmsForView;
         }
         this._renderFilmsList(this._countFilmsForView, this._countFilmsForView + countCardsForRender);
-        if (filmsCount === this._countFilmsForView + countCardsForRender) {
+        this._countCardInPage += countCardsForRender;
+        if (filmsCount === this._countCardInPage) {
           remove(this._buttonShowMore);
         }
-        this._countCardInPage += countCardsForRender;
       });
     } else {
       this._renderNoMoviesBlock();
