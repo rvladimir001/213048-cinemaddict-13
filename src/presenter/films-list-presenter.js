@@ -143,8 +143,6 @@ export default class MovieList {
   }
 
   _handleSortClick(evt) {
-    this._sortMenu.getActiveLink().classList.remove(`sort__button--active`);
-    evt.target.classList.add(`sort__button--active`);
     const typeSort = evt.target.getAttribute(`data-sort`);
     if (this._typeSort !== typeSort) {
       this._sortingFilms(typeSort);
