@@ -58,7 +58,7 @@ export const createComments = (comments) => {
           </section>`;
 };
 
-export default class Comments extends Abstract {
+export class Comments extends Abstract {
   constructor(comments) {
     super();
     this._comments = comments;

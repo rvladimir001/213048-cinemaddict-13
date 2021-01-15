@@ -75,13 +75,13 @@ const createFilmDetailsElement = (film) => {
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${setCheckboxStatus(film.watchlistStatus)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${setCheckboxStatus(film.watchlist)}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${setCheckboxStatus(film.alreadyWatchedSatus)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${setCheckboxStatus(film.watched)}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched film-card__controls-item--active">Already watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${setCheckboxStatus(film.favoritesStatus)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${setCheckboxStatus(film.favorite)}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -91,11 +91,13 @@ const createFilmDetailsElement = (film) => {
   );
 };
 
-export default class FilmDetailsElement extends Abstract {
+export class FilmDetailsElement extends Abstract {
   constructor(film) {
     super();
     this._film = film;
     this._clickHandler = this._clickHandler.bind(this);
+    this._clickHandlerEditStatus = this._clickHandlerEditStatus.bind(this);
+    this._addClass();
   }
 
   getTemplate() {
@@ -110,5 +112,19 @@ export default class FilmDetailsElement extends Abstract {
   setClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
+  }
+
+  _clickHandlerEditStatus(evt) {
+    evt.preventDefault();
+    this._callback.editClick(evt);
+  }
+
+  setClickHandlerEditStatus(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.film-details__controls`).addEventListener(`change`, this._clickHandlerEditStatus);
+  }
+
+  _addClass() {
+    document.body.classList.add(`hide-overflow`);
   }
 }
