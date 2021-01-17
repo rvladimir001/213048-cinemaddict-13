@@ -1,32 +1,40 @@
-import {createElement} from "../utils";
+import Abstract from "./abstract";
 
-export const createSortTemplate = ()=>{
+export const createSortTemplate = () => {
   return (
     `<ul class="sort">
-      <li><a href="#" class="sort__button">Sort by default</a></li>
-      <li><a href="#" class="sort__button">Sort by date</a></li>
-      <li><a href="#" class="sort__button sort__button--active">Sort by rating</a></li>
+      <li><a href="#" class="sort__button sort__button--active" data-sort="default">Sort by default</a></li>
+      <li><a href="#" class="sort__button" data-sort="date">Sort by date</a></li>
+      <li><a href="#" class="sort__button" data-sort="rating">Sort by rating</a></li>
     </ul>`
   );
 };
 
-export default class SortMenu {
+export default class SortMenu extends Abstract {
   constructor() {
-    this._element = null;
+    super();
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return createSortTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  getActiveLink() {
+    return super.getElement().querySelector(`.sort__button--active`);
   }
 
-  removeElement() {
-    this._element = null;
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this.getActiveLink().classList.remove(`sort__button--active`);
+    evt.target.classList.add(`sort__button--active`);
+    this._callback.click(evt);
+  }
+
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    for (let botton of this.getElement().querySelectorAll(`.sort__button`)) {
+      botton.addEventListener(`click`, this._clickHandler);
+    }
   }
 }

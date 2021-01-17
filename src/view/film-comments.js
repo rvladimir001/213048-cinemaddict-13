@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import Abstract from "./abstract";
 
 export const createComments = (comments) => {
   const createCommentTemlate = (commentsList) => {
@@ -58,24 +58,13 @@ export const createComments = (comments) => {
           </section>`;
 };
 
-export default class Comments {
+export class Comments extends Abstract {
   constructor(comments) {
-    this._element = null;
+    super();
     this._comments = comments;
   }
 
   getTemplate() {
     return createComments(this._comments);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import Abstract from "./abstract";
 
 const createFilmDetailsElement = (film) => {
   const createGenresTemlate = (genres) => {
@@ -23,19 +23,16 @@ const createFilmDetailsElement = (film) => {
               <img class="film-details__poster-img" src="./images/posters/${film.poster}" alt="">
               <p class="film-details__age">${film.category}</p>
             </div>
-
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${film.name}</h3>
                   <p class="film-details__title-original">Original: ${film.name}</p>
                 </div>
-
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${film.rating}</p>
                 </div>
               </div>
-
               <table class="film-details__table">
                 <tr class="film-details__row">
                   <td class="film-details__term">Director</td>
@@ -67,51 +64,56 @@ const createFilmDetailsElement = (film) => {
                     ${createGenresTemlate(film.genres)}
                 </tr>
               </table>
-
               <p class="film-details__film-description">
                 ${film.description}
               </p>
             </div>
           </div>
-
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${setCheckboxStatus(film.watchlistStatus)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${setCheckboxStatus(film.watchlist)}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${setCheckboxStatus(film.alreadyWatchedSatus)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${setCheckboxStatus(film.watched)}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched film-card__controls-item--active">Already watched</label>
-
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${setCheckboxStatus(film.favoritesStatus)}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${setCheckboxStatus(film.favorite)}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
-
-        <div class="film-details__bottom-container">
-
-        </div>
+        <div class="film-details__bottom-container"></div>
       </form>
     </section>`
   );
 };
 
-export default class FilmDetailsElement {
+export class FilmDetailsElement extends Abstract {
   constructor(film) {
-    this._element = null;
+    super();
     this._film = film;
+    this._clickHandler = this._clickHandler.bind(this);
+    this._clickHandlerEditStatus = this._clickHandlerEditStatus.bind(this);
   }
 
   getTemplate() {
     return createFilmDetailsElement(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
   }
+
+  _clickHandlerEditStatus(evt) {
+    evt.preventDefault();
+    this._callback.editClick(evt);
+  }
+
+  setClickHandlerEditStatus(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.film-details__controls`).addEventListener(`change`, this._clickHandlerEditStatus);
+  }
+
 }

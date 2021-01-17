@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import Abstract from "./abstract";
 
 const createNoMoviesBlock = () => {
   return (
@@ -6,23 +6,8 @@ const createNoMoviesBlock = () => {
   );
 };
 
-export default class NoMoviesBlock {
-  constructor() {
-    this._element = null;
-  }
-
+export class NoMoviesBlock extends Abstract {
   getTemplate() {
     return createNoMoviesBlock();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

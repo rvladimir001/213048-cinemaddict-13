@@ -142,10 +142,9 @@ const generateFilm = () => {
     country: getRandomElementsFromArray(country),
     genres: getRandomElementsFromArray(genres),
     description: generatedDescription(TEXT),
-    favoritesStatus: getRandomBoolean(),
-    watchlistStatus: getRandomBoolean(),
-    historyStatus: getRandomBoolean(),
-    alreadyWatchedSatus: getRandomBoolean(),
+    favorite: getRandomBoolean(),
+    watchlist: getRandomBoolean(),
+    watched: getRandomBoolean(),
     comments: generateComments(),
     category: getRandomOneElementFromArray(category),
   };
