@@ -1,4 +1,4 @@
-import Abstract from "./abstract";
+import Smart from "./smart";
 
 export const createComments = (comments) => {
   const createCommentTemlate = (commentsList) => {
@@ -58,7 +58,7 @@ export const createComments = (comments) => {
           </section>`;
 };
 
-export class Comments extends Abstract {
+export class Comments extends Smart {
   constructor(comments) {
     super();
     this._comments = comments;

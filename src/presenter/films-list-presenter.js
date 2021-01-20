@@ -90,6 +90,7 @@ export default class MovieList {
     } else {
       this._filmDetailsStatus = false;
       remove(this._filmDetails);
+      // this._filmDetails.restoreHandlers()
       this._renderFilmDetails(index);
     }
   }
@@ -107,18 +108,15 @@ export default class MovieList {
     this._filmDetails.setClickHandlerEditStatus((evt) => {
       this._editFilm(evt, index);
     });
+    // this._filmDetails._setControlHandlers()
   }
 
   _editFilm(evt, index) {
     if (evt.target.tagName === `INPUT` || evt.target.tagName === `BUTTON`) {
-      this._changeData(Object.assign({}, this._allFilmsForView[index], {[evt.target.name]: !this._allFilmsForView[index][evt.target.name]}));
+      this._allFilms = updateItem(this._allFilms, Object.assign({}, this._allFilmsForView[index], {[evt.target.name]: !this._allFilmsForView[index][evt.target.name]}));
+      this._clearFilmList();
+      this.init();
     }
-  }
-
-  _changeData(updatedFilm) {
-    this._allFilms = updateItem(this._allFilms, updatedFilm);
-    this._clearFilmList();
-    this.init();
   }
 
   _close() {
