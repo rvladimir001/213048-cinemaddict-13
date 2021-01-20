@@ -101,7 +101,6 @@ export class FilmDetailsElement extends Smart {
     this.setClickHandlerEditStatus(this._callback.editClick);
   }
 
-
   _clickHandler(evt) {
     evt.preventDefault();
     this._callback.click();
@@ -114,12 +113,13 @@ export class FilmDetailsElement extends Smart {
 
   _clickHandlerEditStatus(evt) {
     evt.preventDefault();
-    let name = evt.target.getAttribute(`name`);
-    console.log(this._film);
-    this._callback.editClick(evt, FilmDetailsElement.parseDataToFilm(this._film));
-    this.updateData({
-      [name]: !this._film[name],
-    });
+    if (evt.target.tagName === `INPUT` || evt.target.tagName === `BUTTON`) {
+      let name = evt.target.getAttribute(`name`);
+      this._callback.editClick(evt, FilmDetailsElement.parseDataToFilm(this._film));
+      this.updateData({
+        [name]: !this._film[name],
+      });
+    }
   }
 
   setClickHandlerEditStatus(callback) {
