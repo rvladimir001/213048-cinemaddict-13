@@ -87,11 +87,9 @@ const createFilmDetailsElement = (film) => {
 export class FilmDetailsElement extends Smart {
   constructor(film) {
     super();
-    this._film = film;
     this._clickHandler = this._clickHandler.bind(this);
     this._clickHandlerEditStatus = this._clickHandlerEditStatus.bind(this);
-    this._data = FilmDetailsElement.parseFilmToData(film);
-    this._setControlHandlers();
+    this._film = FilmDetailsElement.parseFilmToData(film);
   }
 
   getTemplate() {
@@ -99,7 +97,6 @@ export class FilmDetailsElement extends Smart {
   }
 
   restoreHandlers() {
-    this._setControlHandlers();
     this.setClickHandler(this._callback.click);
     this.setClickHandlerEditStatus(this._callback.editClick);
   }
@@ -118,8 +115,8 @@ export class FilmDetailsElement extends Smart {
   _clickHandlerEditStatus(evt) {
     evt.preventDefault();
     let name = evt.target.getAttribute(`name`);
-    console.log("name", name)
-    this._callback.editClick(evt, FilmDetailsElement.parseDataToFilm(this._data));
+    console.log(this._film);
+    this._callback.editClick(evt, FilmDetailsElement.parseDataToFilm(this._film));
     this.updateData({
       [name]: !this._film[name],
     });
@@ -128,13 +125,6 @@ export class FilmDetailsElement extends Smart {
   setClickHandlerEditStatus(callback) {
     this._callback.editClick = callback;
     this.getElement().querySelector(`.film-details__controls`).addEventListener(`change`, this._clickHandlerEditStatus);
-  }
-
-  _setControlHandlers() {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
-    for (let control of this.getElement().querySelectorAll(`.film-details__control-input`)) {
-      control.addEventListener(`change`, this._clickHandlerEditStatus);
-    }
   }
 
   static parseFilmToData(film) {
