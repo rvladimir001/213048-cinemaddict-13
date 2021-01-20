@@ -90,6 +90,7 @@ export class FilmDetailsElement extends Smart {
     this._clickHandler = this._clickHandler.bind(this);
     this._clickHandlerEditStatus = this._clickHandlerEditStatus.bind(this);
     this._film = FilmDetailsElement.parseFilmToData(film);
+    document.body.classList.add(`hide-overflow`);
   }
 
   getTemplate() {
