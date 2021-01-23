@@ -1,4 +1,6 @@
 import Abstract from "./abstract";
+import {timeFormatting} from "../utils/films";
+
 
 export const createFilmCard = (film) => {
   const setСlassActive = (status) => {
@@ -11,7 +13,7 @@ export const createFilmCard = (film) => {
       <p class="film-card__rating">${film.rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${film.releaseDate.getFullYear()}</span>
-        <span class="film-card__duration">${film.runtime}</span>
+        <span class="film-card__duration">${timeFormatting(film.runtime)}</span>
         <span class="film-card__genre">${film.genres[0]}</span>
       </p>
       <img src="./images/posters/${film.poster}" alt="" class="film-card__poster">

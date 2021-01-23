@@ -9,6 +9,7 @@ import {
   generatedDescription,
 } from "./utils.js";
 import {generateComments} from './comment.js';
+import {getRandomInteger} from "./utils";
 
 const FILM_COUNT = 15;
 
@@ -106,19 +107,6 @@ const country = [
   `Italy`,
 ];
 
-const runtime = [
-  `1h 50m`,
-  `1h 43m`,
-  `2h 06m`,
-  `1h 32m`,
-  `2h 43m`,
-  `1h 27m`,
-  `2h 12m`,
-  `1h 54m`,
-  `1h 45m`,
-  `1h 32m`,
-];
-
 const category = [
   `6+`,
   `10+`,
@@ -138,7 +126,7 @@ const generateFilm = () => {
     actors: getRandomElementsFromArray(actors),
     releaseDate: generateReleaseDate(),
     releaseFullDate: generateReleaseDateDetails(),
-    runtime: getRandomOneElementFromArray(runtime),
+    runtime: getRandomInteger(61, 128),
     country: getRandomElementsFromArray(country),
     genres: getRandomElementsFromArray(genres),
     description: generatedDescription(TEXT),

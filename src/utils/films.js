@@ -38,3 +38,9 @@ export const emoji = (emotion) => {
 export const createEmojiLabel = (emotion) => {
   return `<img src="./images/emoji/${emoji(emotion)}" width="55" height="55" alt="emoji-${emotion}">`;
 };
+
+export const timeFormatting = (time) => {
+  let h = Math.trunc(time / 60);
+  let m = time % 60;
+  return `${h} h ${m} m`;
+};
