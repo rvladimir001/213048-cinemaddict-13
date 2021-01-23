@@ -1,10 +1,14 @@
 import Smart from "./smart";
+import {createElement, render} from "../utils";
+import {RenderPosition} from "../utils/render";
+import {createEmojiLabel} from "../utils/films";
+
 
 export const createComments = (comments) => {
   const createCommentTemlate = (commentsList) => {
     let commentTemlate = ``;
     for (const comment of commentsList) {
-      commentTemlate += `<li class="film-details__comment">
+      commentTemlate += `<li class="film-details__comment" id="${comment.id}">
                 <span class="film-details__comment-emoji">
                   <img src="./images/emoji/${comment.emoji}" width="55" height="55" alt="emoji-smile">
                 </span>
@@ -61,10 +65,51 @@ export const createComments = (comments) => {
 export class Comments extends Smart {
   constructor(comments) {
     super();
+    this._element = null;
     this._comments = comments;
+    this._deleteClickComment = this._deleteClickComment.bind(this);
+    this._addCommentEmotion = this._addCommentEmotion.bind(this);
   }
 
   getTemplate() {
     return createComments(this._comments);
+  }
+
+  getDeleteLinks() {
+    return this.getElement().querySelectorAll(`.film-details__comment-delete`);
+  }
+
+  getInputsEmoji() {
+    return this.getElement().querySelectorAll(`.film-details__emoji-item`);
+  }
+
+  _deleteClickComment(evt) {
+    evt.preventDefault();
+    this._callback.removeClick(evt);
+  }
+
+  setDeleteCommentHandler(callback) {
+    this._callback.removeClick = callback;
+    for (let link of this.getDeleteLinks()) {
+      link.addEventListener(`click`, this._deleteClickComment);
+    }
+  }
+
+  _addCommentEmotion(evt) {
+    evt.preventDefault();
+    this._callback.addClickEmotion(evt);
+  }
+
+  renderEmoji(nameEmoji, emoji) {
+    const img = createElement(createEmojiLabel(emoji));
+    nameEmoji.innerHTML = ``;
+    render(nameEmoji, img, RenderPosition.BEFOREEND);
+  }
+
+  setAddCommentHandler(callback) {
+    this._callback.addClickEmotion = callback;
+    for (let i of this.getInputsEmoji()) {
+      i.addEventListener(`change`, this._addCommentEmotion);
+    }
   }
 }

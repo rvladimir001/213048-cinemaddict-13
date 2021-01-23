@@ -1,12 +1,13 @@
-import {remove, render, RenderPosition, updateItem} from "../utils/render";
+import {remove, render, RenderPosition, replace, updateItem} from "../utils/render";
 import {ButtonShowMore as ButtonShowMoreView} from "../view/button-show-more";
 import {NoMoviesBlock as NoMoviesBlockView} from "../view/no-movies";
 import {FilmCard as FilmCardView} from "../view/film-card";
 import {FilmDetailsElement as FilmDetailsElementView} from "../view/film-details";
 import {Comments as CommentsView} from "../view/film-comments";
-import {closeFilmDetails, closeFilmDetailsEsc} from "../utils/films";
+import {closeFilmDetails, closeFilmDetailsEsc, emoji} from "../utils/films";
 import SortMenu from "../view/sort-menu";
 import FilmsContainer from "../view/films-container";
+import {nanoid} from 'nanoid';
 
 
 const FILM_COUNT_FOR_LIST = 5;
@@ -99,6 +100,8 @@ export default class MovieList {
     this._comments = new CommentsView(this._allFilmsForView[index].comments);
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
+    this._setHendlersComment(this._comments, index)
+    this._handleFormSubmit(index);
     this._filmDetails.setClickHandler(() => this._close());
     document.addEventListener(`keydown`, (evt) => {
       this._closeEsc(evt, this._filmDetails);
@@ -107,6 +110,11 @@ export default class MovieList {
     this._filmDetails.setClickHandlerEditStatus((evt) => {
       this._editFilm(evt, index);
     });
+  }
+
+  _setHendlersComment(comment, index) {
+    comment.setDeleteCommentHandler((evt) => this._removeFilmComment(evt, index));
+    comment.setAddCommentHandler((evt) => this._addFilmComment(evt))
   }
 
   _editFilm(evt, index) {
@@ -118,12 +126,12 @@ export default class MovieList {
   _close() {
     closeFilmDetails(this._filmDetails, this._containerFilms);
     remove(this._filmDetails);
+    remove(this._comments);
     this._filmDetailsStatus = true;
   }
 
   _closeEsc(evt) {
     closeFilmDetailsEsc(evt, this._filmDetails);
-    remove(this._filmDetails);
     this._filmDetailsStatus = true;
   }
 
@@ -157,4 +165,56 @@ export default class MovieList {
     this._clearFilmList();
     this.init();
   }
+
+    _removeFilmComment(evt, index) {
+    let commentId = evt.target.closest(`.film-details__comment`).getAttribute(`id`);
+    let commentInd = this._comments._comments.findIndex((item) => item.id === commentId);
+    this._comments._comments.splice(commentInd, 1);
+    this._updateComment(Object.assign({}, this._comments, {comments: this._comments.comments}), index);
+  }
+
+  _addFilmComment(evt) {
+    const labelEmotion = this._comments.getElement().querySelector(`.film-details__add-emoji-label`);
+    const emotion = evt.target.value;
+    this._comments.renderEmoji(labelEmotion, emotion);
+  }
+
+  _handleFormSubmit(index) {
+    document.addEventListener(`keydown`, (evt) => {
+      if ((evt.ctrlKey) && (evt.code === `Enter`)) {
+        evt.preventDefault();
+        this.submitComments(index);
+      }
+    });
+  }
+    _updateComment(updatedFilm, index) {
+      this._allFilms = updateItem(this._allFilms, updatedFilm);
+      remove(this._comments)
+      this._comments = new CommentsView(this._allFilms[index].comments);
+      render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
+      this._setHendlersComment(this._comments, index)
+  }
+
+  submitComments(index) {
+    let text = this._comments.getElement().querySelector(`.film-details__comment-input`);
+    const emotions = document.querySelectorAll(`.film-details__emoji-item`);
+    let currentEmoji;
+    for (let emotion of emotions) {
+      if (emotion.checked) {
+        currentEmoji = emotion.value;
+      }
+    }
+    if (currentEmoji !== null && text) {
+      let newComment = {
+        id: nanoid(),
+          content: text.value,
+          author: `I'm`,
+          emoji: emoji(currentEmoji),
+        commentDate: new Date(),
+      };
+      this._comments._comments.push(newComment);
+    }
+    this._updateComment(Object.assign({}, this._allFilmsForView[index]._comments, this._allFilmsForView[index].comments), index);
+  }
+
 }
