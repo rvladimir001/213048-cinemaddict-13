@@ -1,4 +1,4 @@
-import Abstract from "./abstract";
+import Smart from "./smart";
 
 const createFilmDetailsElement = (film) => {
   const createGenresTemlate = (genres) => {
@@ -84,16 +84,22 @@ const createFilmDetailsElement = (film) => {
   );
 };
 
-export class FilmDetailsElement extends Abstract {
+export class FilmDetailsElement extends Smart {
   constructor(film) {
     super();
-    this._film = film;
     this._clickHandler = this._clickHandler.bind(this);
     this._clickHandlerEditStatus = this._clickHandlerEditStatus.bind(this);
+    this._film = FilmDetailsElement.parseFilmToData(film);
+    document.body.classList.add(`hide-overflow`);
   }
 
   getTemplate() {
     return createFilmDetailsElement(this._film);
+  }
+
+  restoreHandlers() {
+    this.setClickHandler(this._callback.click);
+    this.setClickHandlerEditStatus(this._callback.editClick);
   }
 
   _clickHandler(evt) {
@@ -108,7 +114,13 @@ export class FilmDetailsElement extends Abstract {
 
   _clickHandlerEditStatus(evt) {
     evt.preventDefault();
-    this._callback.editClick(evt);
+    if (evt.target.tagName === `INPUT` || evt.target.tagName === `BUTTON`) {
+      let name = evt.target.getAttribute(`name`);
+      this._callback.editClick(evt, FilmDetailsElement.parseDataToFilm(this._film));
+      this.updateData({
+        [name]: !this._film[name],
+      });
+    }
   }
 
   setClickHandlerEditStatus(callback) {
@@ -116,4 +128,19 @@ export class FilmDetailsElement extends Abstract {
     this.getElement().querySelector(`.film-details__controls`).addEventListener(`change`, this._clickHandlerEditStatus);
   }
 
+  static parseFilmToData(film) {
+    return Object.assign({}, film, {
+      favorite: film.favorite,
+      watched: film.watched,
+      watchlist: film.watchlist,
+    });
+  }
+
+  static parseDataToFilm(data) {
+    data = Object.assign({}, data);
+    delete data.favorite;
+    delete data.watched;
+    delete data.watchlist;
+    return data;
+  }
 }
