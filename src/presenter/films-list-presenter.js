@@ -1,4 +1,4 @@
-import {remove, render, RenderPosition, replace, updateItem} from "../utils/render";
+import {remove, render, RenderPosition, updateItem} from "../utils/render";
 import {ButtonShowMore as ButtonShowMoreView} from "../view/button-show-more";
 import {NoMoviesBlock as NoMoviesBlockView} from "../view/no-movies";
 import {FilmCard as FilmCardView} from "../view/film-card";
@@ -100,7 +100,7 @@ export default class MovieList {
     this._comments = new CommentsView(this._allFilmsForView[index].comments);
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
-    this._setHendlersComment(this._comments, index)
+    this._setHendlersComment(this._comments, index);
     this._handleFormSubmit(index);
     this._filmDetails.setClickHandler(() => this._close());
     document.addEventListener(`keydown`, (evt) => {
@@ -114,7 +114,7 @@ export default class MovieList {
 
   _setHendlersComment(comment, index) {
     comment.setDeleteCommentHandler((evt) => this._removeFilmComment(evt, index));
-    comment.setAddCommentHandler((evt) => this._addFilmComment(evt))
+    comment.setAddCommentHandler((evt) => this._addFilmComment(evt));
   }
 
   _editFilm(evt, index) {
@@ -166,7 +166,7 @@ export default class MovieList {
     this.init();
   }
 
-    _removeFilmComment(evt, index) {
+  _removeFilmComment(evt, index) {
     let commentId = evt.target.closest(`.film-details__comment`).getAttribute(`id`);
     let commentInd = this._comments._comments.findIndex((item) => item.id === commentId);
     this._comments._comments.splice(commentInd, 1);
@@ -187,12 +187,13 @@ export default class MovieList {
       }
     });
   }
-    _updateComment(updatedFilm, index) {
-      this._allFilms = updateItem(this._allFilms, updatedFilm);
-      remove(this._comments)
-      this._comments = new CommentsView(this._allFilms[index].comments);
-      render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
-      this._setHendlersComment(this._comments, index)
+
+  _updateComment(updatedFilm, index) {
+    this._allFilms = updateItem(this._allFilms, updatedFilm);
+    remove(this._comments);
+    this._comments = new CommentsView(this._allFilms[index].comments);
+    render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
+    this._setHendlersComment(this._comments, index);
   }
 
   submitComments(index) {
@@ -207,9 +208,9 @@ export default class MovieList {
     if (currentEmoji !== null && text) {
       let newComment = {
         id: nanoid(),
-          content: text.value,
-          author: `I'm`,
-          emoji: emoji(currentEmoji),
+        content: text.value,
+        author: `I'm`,
+        emoji: emoji(currentEmoji),
         commentDate: new Date(),
       };
       this._comments._comments.push(newComment);
