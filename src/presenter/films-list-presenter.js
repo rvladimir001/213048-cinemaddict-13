@@ -4,18 +4,21 @@ import {NoMoviesBlock as NoMoviesBlockView} from "../view/no-movies";
 import {FilmCard as FilmCardView} from "../view/film-card";
 import {FilmDetailsElement as FilmDetailsElementView} from "../view/film-details";
 import {Comments as CommentsView} from "../view/film-comments";
-import {closeFilmDetails, closeFilmDetailsEsc, emoji} from "../utils/films";
+import {closeFilmDetails, closeFilmDetailsEsc, emoji, UserAction, UpdateType, SortType} from "../utils/films";
 import SortMenu from "../view/sort-menu";
 import FilmsContainer from "../view/films-container";
 import {nanoid} from 'nanoid';
 
 
+
 const FILM_COUNT_FOR_LIST = 5;
 
 export default class MovieList {
-  constructor(container, filmsModel) {
+  constructor(container, filmsModel, commentsModel) {
     this._filmsModel = filmsModel;
+    this._commentsModel = commentsModel;
     this._container = container;
+    this._currentSortButton = SortType.DEFAULT;
     this._renderFilmsCount = FILM_COUNT_FOR_LIST;
     this._containerFilmsListComponent = new FilmsContainer();
     this._containerFilms = null;
@@ -27,10 +30,15 @@ export default class MovieList {
     this._typeSort = `default`;
     this._allFilmsForView = null;
     this._countCardInPage = 5;
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+
+    this._filmsModel.addObserver(this._handleModelEvent);
+
   }
 
   init() {
-    this._allFilmsForView = this._getFilms().slice();
+    // this._allFilmsForView = this._getFilms().slice();
     this._renderSort();
     render(this._container, this._containerFilmsListComponent, RenderPosition.BEFOREEND);
     this._containerFilms = this._container.querySelector(`.films-list__container`);
@@ -45,13 +53,12 @@ export default class MovieList {
       case `date`:
         return this._filmsModel.getFilms().slice().sort((a, b) => a.releaseDate > b.releaseDate ? 1 : -1);
     }
-
-    return this._filmsModel.getFilms()
+    return this._filmsModel.getFilms();
   }
 
   _renderFilmsList(start, end) {
     for (let i = start; i < end; i++) {
-      this._cardFilmComponent = new FilmCardView(this._allFilmsForView[i]);
+      this._cardFilmComponent = new FilmCardView(this._getFilms().slice()[i]);
       render(this._containerFilms, this._cardFilmComponent, RenderPosition.BEFOREEND);
       this._cardFilmComponent.setClickHandler(() => this._showFilmDetails(i));
       this._cardFilmComponent.setClickHandlerEditStatus((evt) => this._editFilm(evt, i));
@@ -59,7 +66,7 @@ export default class MovieList {
   }
 
   _renderFilmsBlock() {
-    const filmsCount = this._allFilmsForView.length;
+    const filmsCount = this._getFilms().slice().length;
     if (filmsCount > 0) {
       let countCardsForRender = null;
       this._renderFilmsList(0, this._countCardInPage);
@@ -106,8 +113,8 @@ export default class MovieList {
   }
 
   _renderFilmDetails(index) {
-    this._filmDetails = new FilmDetailsElementView(this._allFilmsForView[index]);
-    this._comments = new CommentsView(this._allFilmsForView[index].comments);
+    this._filmDetails = new FilmDetailsElementView(this._getFilms().slice()[index]);
+    this._comments = new CommentsView(this._getFilms().slice()[index].comments);
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
     this._setHendlersComment(this._comments, index);
@@ -128,7 +135,7 @@ export default class MovieList {
   }
 
   _editFilm(evt, index) {
-    updateItem(this._getFilms(), Object.assign({}, this._allFilmsForView[index], {[evt.target.name]: !this._allFilmsForView[index][evt.target.name]}));
+    updateItem(this._getFilms(), Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]}));
     this._clearFilmList();
     this.init();
   }
@@ -214,6 +221,43 @@ export default class MovieList {
       };
       this._comments._comments.push(newComment);
     }
-    this._updateComment(Object.assign({}, this._allFilmsForView[index]._comments, this._allFilmsForView[index].comments), index);
+    this._updateComment(Object.assign({},this._getFilms()[index]._comments, this._getFilms().slice()[index].comments), index);
+  }
+
+  _handleViewAction(actionType, updateType, update) {
+       console.log("updateType", updateType, " -- ", "data", update)
+    switch (actionType) {
+      case UserAction.UPDATE_FILM:
+        this._filmsModel.updateFilm(updateType, update);
+        break;
+      case UserAction.DELETE_COMMENT:
+        this._commentsModel.deleteComment(updateType, update);
+        break;
+      case UserAction.ADD_COMMENT:
+        this._commentsModel.addComment(updateType, update);
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, data) {
+    console.log("updateType", updateType, " -- ", "data", data)
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._filmsModel.forEach((card) => {
+          console.log("card", card)
+         // card.updateFilm(data)
+        });
+        break;
+
+      case UpdateType.MINOR:
+        this._clearFilmList();
+        this._renderFilmsBlock();
+        break;
+
+      case UpdateType.MAJOR:
+        this._clearFilmList();
+        this._renderFilmsBlock();
+        break;
+    }
   }
 }
