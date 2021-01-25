@@ -23,4 +23,4 @@ const siteFooterStat = siteFooterElement.querySelector(`.footer__statistics`);
 
 render(siteFooterStat, new FooterStat(totalFilms), RenderPosition.BEFOREEND);
 
-filmsPresentor.init(allFilmsForView);
+filmsPresentor.init();

@@ -13,7 +13,8 @@ import {nanoid} from 'nanoid';
 const FILM_COUNT_FOR_LIST = 5;
 
 export default class MovieList {
-  constructor(container, allFilms) {
+  constructor(container, filmsModel) {
+    this._filmsModel = filmsModel;
     this._container = container;
     this._renderFilmsCount = FILM_COUNT_FOR_LIST;
     this._containerFilmsListComponent = new FilmsContainer();
@@ -23,20 +24,29 @@ export default class MovieList {
     this._nomovies = new NoMoviesBlockView();
     this._filmDetailsStatus = true;
     this._filmDetails = null;
-    this._allFilms = allFilms.slice();
-    this._defaultAllFilms = allFilms;
     this._typeSort = `default`;
     this._allFilmsForView = null;
     this._countCardInPage = 5;
   }
 
   init() {
-    this._allFilmsForView = this._allFilms.slice();
+    this._allFilmsForView = this._getFilms().slice();
     this._renderSort();
     render(this._container, this._containerFilmsListComponent, RenderPosition.BEFOREEND);
     this._containerFilms = this._container.querySelector(`.films-list__container`);
     this._countFilmsForView = 0;
     this._renderFilmsBlock();
+  }
+
+  _getFilms() {
+    switch (this._typeSort) {
+      case `rating`:
+        return this._filmsModel.getFilms().slice().sort((a, b) => a.rating > b.rating ? 1 : -1);
+      case `date`:
+        return this._filmsModel.getFilms().slice().sort((a, b) => a.releaseDate > b.releaseDate ? 1 : -1);
+    }
+
+    return this._filmsModel.getFilms()
   }
 
   _renderFilmsList(start, end) {
@@ -118,7 +128,7 @@ export default class MovieList {
   }
 
   _editFilm(evt, index) {
-    this._allFilms = updateItem(this._allFilms, Object.assign({}, this._allFilmsForView[index], {[evt.target.name]: !this._allFilmsForView[index][evt.target.name]}));
+    updateItem(this._getFilms(), Object.assign({}, this._allFilmsForView[index], {[evt.target.name]: !this._allFilmsForView[index][evt.target.name]}));
     this._clearFilmList();
     this.init();
   }
@@ -149,18 +159,7 @@ export default class MovieList {
   _handleSortClick(evt) {
     const typeSort = evt.target.getAttribute(`data-sort`);
     if (this._typeSort !== typeSort) {
-      this._sortingFilms(typeSort);
       this._typeSort = typeSort;
-    }
-  }
-
-  _sortingFilms(typeSort) {
-    if (typeSort === `rating`) {
-      this._allFilms.sort((a, b) => a.rating > b.rating ? 1 : -1);
-    } else if (typeSort === `date`) {
-      this._allFilms.sort((a, b) => a.releaseDate > b.releaseDate ? 1 : -1);
-    } else {
-      this._allFilms = this._defaultAllFilms.slice();
     }
     this._clearFilmList();
     this.init();
@@ -189,9 +188,9 @@ export default class MovieList {
   }
 
   _updateComment(updatedFilm, index) {
-    this._allFilms = updateItem(this._allFilms, updatedFilm);
+    updateItem(this._getFilms(), updatedFilm);
     remove(this._comments);
-    this._comments = new CommentsView(this._allFilms[index].comments);
+    this._comments = new CommentsView(this._getFilms()[index].comments);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
     this._setHendlersComment(this._comments, index);
   }
@@ -217,5 +216,4 @@ export default class MovieList {
     }
     this._updateComment(Object.assign({}, this._allFilmsForView[index]._comments, this._allFilmsForView[index].comments), index);
   }
-
 }
