@@ -30,15 +30,19 @@ export default class MovieList {
     this._typeSort = `default`;
     this._allFilmsForView = null;
     this._countCardInPage = 5;
+    this.currentFilmInde = null;
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
 
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleCommentsViewAction = this._handleCommentsViewAction.bind(this);
+    this._handleCommentsModelEvent = this._handleCommentsModelEvent.bind(this);
+    this._handleAddComment = this._handleAddComment.bind(this);
   }
 
   init() {
-    // this._allFilmsForView = this._getFilms().slice();
     this._renderSort();
     render(this._container, this._containerFilmsListComponent, RenderPosition.BEFOREEND);
     this._containerFilms = this._container.querySelector(`.films-list__container`);
@@ -61,7 +65,8 @@ export default class MovieList {
       this._cardFilmComponent = new FilmCardView(this._getFilms().slice()[i]);
       render(this._containerFilms, this._cardFilmComponent, RenderPosition.BEFOREEND);
       this._cardFilmComponent.setClickHandler(() => this._showFilmDetails(i));
-      this._cardFilmComponent.setClickHandlerEditStatus((evt) => this._editFilm(evt, i));
+      //this._cardFilmComponent.setClickHandlerEditStatus((evt) => this._editFilm(evt, i));
+      this._cardFilmComponent.setClickHandlerEditStatus(() => this._handleModelEvent('MINOR', this._getFilms().slice()[i]));
     }
   }
 
@@ -99,6 +104,7 @@ export default class MovieList {
   }
 
   _showFilmDetails(index) {
+    this.currentFilmInde = index;
     if (this._countCardInPage !== 0) {
       this._renderFilmsCount = this._countCardInPage;
     }
@@ -114,7 +120,9 @@ export default class MovieList {
 
   _renderFilmDetails(index) {
     this._filmDetails = new FilmDetailsElementView(this._getFilms().slice()[index]);
-    this._comments = new CommentsView(this._getFilms().slice()[index].comments);
+    this._commentsModel.setComments(this._getFilms().slice()[index].comments);
+    this._commentsModel.addObserver(this._handleCommentsModelEvent);
+    this._comments = new CommentsView(this._commentsModel.getComments());
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
     this._setHendlersComment(this._comments, index);
@@ -131,11 +139,13 @@ export default class MovieList {
 
   _setHendlersComment(comment, index) {
     comment.setDeleteCommentHandler((evt) => this._removeFilmComment(evt, index));
+    // comment.setDeleteClickHandler(this._handleDeleteClick);
     comment.setAddCommentHandler((evt) => this._addFilmComment(evt));
   }
 
   _editFilm(evt, index) {
-    updateItem(this._getFilms(), Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]}));
+    let updatedFilm = updateItem(this._getFilms(), Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]}));
+    this._filmsModel.setFilms(updatedFilm)
     this._clearFilmList();
     this.init();
   }
@@ -173,9 +183,11 @@ export default class MovieList {
   }
 
   _removeFilmComment(evt, index) {
+    console.log("index", index)
     let commentId = evt.target.closest(`.film-details__comment`).getAttribute(`id`);
-    let commentInd = this._comments._comments.findIndex((item) => item.id === commentId);
+    let commentInd = this._commentsModel.getComments().findIndex((item) => item.id === commentId);
     this._comments._comments.splice(commentInd, 1);
+    //let commentInd = this._commentsModel.getComments().findIndex((item) => item.id === commentId);
     this._updateComment(Object.assign({}, this._comments, {comments: this._comments.comments}), index);
   }
 
@@ -225,7 +237,7 @@ export default class MovieList {
   }
 
   _handleViewAction(actionType, updateType, update) {
-       console.log("updateType", updateType, " -- ", "data", update)
+    console.log("actionType", actionType)
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
@@ -240,12 +252,14 @@ export default class MovieList {
   }
 
   _handleModelEvent(updateType, data) {
-    console.log("updateType", updateType, " -- ", "data", data)
+    console.log("data", data)
     switch (updateType) {
       case UpdateType.PATCH:
-        this._filmsModel.forEach((card) => {
-          console.log("card", card)
-         // card.updateFilm(data)
+        this._filmsModel.getFilms().forEach((card) => {
+          if (card.id === data.id) {
+            this._cardFilmComponent = new FilmCardView(card[data.id]);
+            render(this._containerFilms, this._cardFilmComponent, RenderPosition.BEFOREEND);
+          }
         });
         break;
 
@@ -258,6 +272,57 @@ export default class MovieList {
         this._clearFilmList();
         this._renderFilmsBlock();
         break;
+
+      case UpdateType.STATS:
+        //тут будет обновление статистики
+
+    }
+  }
+
+  _handleCommentsViewAction(actionType, updateType, update) {
+
+    switch (actionType) {
+      case UserAction.DELETE_COMMENT:
+        this._commentsModel.deleteComment(updateType, update);
+        break;
+      case UserAction.ADD_COMMENT:
+        this._commentsModel.addComment(updateType, update);
+        break;
+    }
+  }
+
+    _handleCommentsModelEvent(updateType) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._close()
+        this._showFilmDetails(this.currentFilmInde)
+        break;
+    }
+  }
+
+    // обработчик удаления комментария
+  _handleDeleteClick(deletedCommentId) {
+    this._handleCommentsViewAction(
+        UserAction.DELETE_COMMENT,
+        UpdateType.PATCH,
+        parseInt(deletedCommentId, 10)
+    );
+    this._commentsModel.updateData({
+      comments: this._commentsModel
+    });
+  }
+
+
+  _handleAddComment(newComment) {
+    if (newComment.emoji && newComment.text) {
+      this._handleCommentsViewAction(
+          UserAction.ADD_COMMENT,
+          UpdateType.PATCH,
+          Object.assign({}, newComment)
+      );
+      this._commentsModel.updateData({
+        comments: this._commentsModel
+      });
     }
   }
 }
