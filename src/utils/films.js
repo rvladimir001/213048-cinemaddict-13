@@ -51,17 +51,15 @@ export const UpdateType = {
   MAJOR: `MAJOR`,
 };
 
-export const FilterType = {
-  ALL_MOVIES: `all`,
-  WATCHLIST: `watchlist`,
-  HISTORY: `history`,
-  FAVORITES: `favorites`,
-  STATS: `stats`,
-};
-
 export const SortType = {
   DEFAULT: `default`,
-  BY_DATE: `by-date`,
-  BY_RATE: `by-rate`,
-  BY_COMMENTS: `by-comments`
+  DATE: `date`,
+  RATING: `rating`
+};
+
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`
 };

@@ -4,46 +4,45 @@ import {NoMoviesBlock as NoMoviesBlockView} from "../view/no-movies";
 import {FilmCard as FilmCardView} from "../view/film-card";
 import {FilmDetailsElement as FilmDetailsElementView} from "../view/film-details";
 import {Comments as CommentsView} from "../view/film-comments";
-import {closeFilmDetails, closeFilmDetailsEsc, emoji, UserAction, UpdateType, SortType} from "../utils/films";
+import {
+  closeFilmDetails,
+  closeFilmDetailsEsc,
+  emoji,
+  SortType,
+  filmsSort,
+} from "../utils/films";
 import SortMenu from "../view/sort-menu";
 import FilmsContainer from "../view/films-container";
 import {nanoid} from 'nanoid';
 import Comments from "../model/comments";
+import ListEmpty from "../view/list-empty";
 
 
 const FILM_COUNT_FOR_LIST = 5;
 
 export default class MovieList {
-  constructor(container, filmsModel, commentsModel) {
+  constructor(container, filmsModel, filtersModel) {
     this._filmsModel = filmsModel;
-    // this._commentsModel = commentsModel;
+    this._filtersModel = filtersModel;
     this._container = container;
     this._currentSortButton = SortType.DEFAULT;
     this._renderFilmsCount = FILM_COUNT_FOR_LIST;
     this._containerFilmsListComponent = new FilmsContainer();
     this._containerFilms = null;
     this._sortMenu = new SortMenu();
+    this._filterMenu = new ListEmpty();
     this._buttonShowMore = new ButtonShowMoreView();
     this._nomovies = new NoMoviesBlockView();
     this._filmDetailsStatus = true;
     this._filmDetails = null;
     this._typeSort = `default`;
-    this._allFilmsForView = null;
+    this._typeFilter = `all`;
     this._countCardInPage = 5;
-    this.currentFilmInde = null;
     this._commentsList = [];
-    // this._handleViewAction = this._handleViewAction.bind(this);
-    // this._handleModelEvent = this._handleModelEvent.bind(this);
-    //
-    // this._filmsModel.addObserver(this._handleModelEvent);
-    //
-    // this._handleDeleteClick = this._handleDeleteClick.bind(this);
-    // this._handleCommentsViewAction = this._handleCommentsViewAction.bind(this);
-    // this._handleCommentsModelEvent = this._handleCommentsModelEvent.bind(this);
-    // this._handleAddComment = this._handleAddComment.bind(this);
   }
 
   init() {
+    this._renderFilter();
     this._renderSort();
     render(this._container, this._containerFilmsListComponent, RenderPosition.BEFOREEND);
     this._containerFilms = this._container.querySelector(`.films-list__container`);
@@ -52,13 +51,8 @@ export default class MovieList {
   }
 
   _getFilms() {
-    switch (this._typeSort) {
-      case `rating`:
-        return this._filmsModel.getFilms().slice().sort((a, b) => a.rating > b.rating ? 1 : -1);
-      case `date`:
-        return this._filmsModel.getFilms().slice().sort((a, b) => a.releaseDate > b.releaseDate ? 1 : -1);
-    }
-    return this._filmsModel.getFilms();
+    this._filtersModel.setFilter(this._typeFilter);
+    return this._filtersModel.sortFilms(this._filmsModel.getFilms(), this._typeSort);
   }
 
   _renderFilmsList(start, end) {
@@ -107,7 +101,6 @@ export default class MovieList {
   }
 
   _showFilmDetails(index) {
-    this.currentFilmInde = index;
     if (this._countCardInPage !== 0) {
       this._renderFilmsCount = this._countCardInPage;
     }
@@ -140,7 +133,6 @@ export default class MovieList {
 
   _setHendlersComment(comment, index) {
     comment.setDeleteCommentHandler((evt) => this._removeFilmComment(evt, index));
-    // comment.setDeleteClickHandler(this._handleDeleteClick);
     comment.setAddCommentHandler((evt) => this._addFilmComment(evt));
   }
 
@@ -169,6 +161,13 @@ export default class MovieList {
     }
   }
 
+  _renderFilter() {
+    const filmsSorted = filmsSort(this._getFilms());
+    this._filterMenu.setCounts(filmsSorted.watchlist.length, filmsSorted.watched.length, filmsSorted.favorites.length);
+    render(this._container, this._filterMenu, RenderPosition.BEFOREEND);
+    this._filterMenu.setClickHandler((evt) => this._handleFilterClick(evt));
+  }
+
   _renderSort() {
     render(this._container, this._sortMenu, RenderPosition.BEFOREEND);
     this._sortMenu.setClickHandler((evt) => this._handleSortClick(evt));
@@ -178,6 +177,15 @@ export default class MovieList {
     const typeSort = evt.target.getAttribute(`data-sort`);
     if (this._typeSort !== typeSort) {
       this._typeSort = typeSort;
+    }
+    this._clearFilmList();
+    this.init();
+  }
+
+  _handleFilterClick(evt) {
+    const typeFilter = evt.target.getAttribute(`data-filter`);
+    if (this._typeFilter !== typeFilter) {
+      this._typeFilter = typeFilter;
     }
     this._clearFilmList();
     this.init();
