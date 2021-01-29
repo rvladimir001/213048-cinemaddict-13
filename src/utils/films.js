@@ -62,10 +62,10 @@ export const FilterType = {
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
   FAVORITES: `favorites`
+};
 
 export const timeFormatting = (time) => {
   let h = Math.trunc(time / 60);
   let m = time % 60;
   return `${h} h ${m} m`;
-
 };
