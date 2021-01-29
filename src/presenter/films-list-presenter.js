@@ -4,34 +4,45 @@ import {NoMoviesBlock as NoMoviesBlockView} from "../view/no-movies";
 import {FilmCard as FilmCardView} from "../view/film-card";
 import {FilmDetailsElement as FilmDetailsElementView} from "../view/film-details";
 import {Comments as CommentsView} from "../view/film-comments";
-import {closeFilmDetails, closeFilmDetailsEsc, emoji} from "../utils/films";
+import {
+  closeFilmDetails,
+  closeFilmDetailsEsc,
+  emoji,
+  SortType,
+  filmsSort,
+} from "../utils/films";
 import SortMenu from "../view/sort-menu";
 import FilmsContainer from "../view/films-container";
 import {nanoid} from 'nanoid';
+import Comments from "../model/comments";
+import ListEmpty from "../view/list-empty";
 
 
 const FILM_COUNT_FOR_LIST = 5;
 
 export default class MovieList {
-  constructor(container, allFilms) {
+  constructor(container, filmsModel, filtersModel) {
+    this._filmsModel = filmsModel;
+    this._filtersModel = filtersModel;
     this._container = container;
+    this._currentSortButton = SortType.DEFAULT;
     this._renderFilmsCount = FILM_COUNT_FOR_LIST;
     this._containerFilmsListComponent = new FilmsContainer();
     this._containerFilms = null;
     this._sortMenu = new SortMenu();
+    this._filterMenu = new ListEmpty();
     this._buttonShowMore = new ButtonShowMoreView();
     this._nomovies = new NoMoviesBlockView();
     this._filmDetailsStatus = true;
     this._filmDetails = null;
-    this._allFilms = allFilms.slice();
-    this._defaultAllFilms = allFilms;
     this._typeSort = `default`;
-    this._allFilmsForView = null;
+    this._typeFilter = `all`;
     this._countCardInPage = 5;
+    this._commentsList = [];
   }
 
   init() {
-    this._allFilmsForView = this._allFilms.slice();
+    this._renderFilter();
     this._renderSort();
     render(this._container, this._containerFilmsListComponent, RenderPosition.BEFOREEND);
     this._containerFilms = this._container.querySelector(`.films-list__container`);
@@ -39,9 +50,17 @@ export default class MovieList {
     this._renderFilmsBlock();
   }
 
+  _getFilms() {
+    this._filtersModel.setFilter(this._typeFilter);
+    return this._filtersModel.sortFilms(this._filmsModel.getFilms(), this._typeSort);
+  }
+
   _renderFilmsList(start, end) {
     for (let i = start; i < end; i++) {
-      this._cardFilmComponent = new FilmCardView(this._allFilmsForView[i]);
+      this._cardFilmComponent = new FilmCardView(this._getFilms().slice()[i]);
+      let commentsModel = new Comments();
+      commentsModel.setComments(this._getFilms().slice()[i].comments);
+      this._commentsList.push(commentsModel);
       render(this._containerFilms, this._cardFilmComponent, RenderPosition.BEFOREEND);
       this._cardFilmComponent.setClickHandler(() => this._showFilmDetails(i));
       this._cardFilmComponent.setClickHandlerEditStatus((evt) => this._editFilm(evt, i));
@@ -49,7 +68,7 @@ export default class MovieList {
   }
 
   _renderFilmsBlock() {
-    const filmsCount = this._allFilmsForView.length;
+    const filmsCount = this._getFilms().slice().length;
     if (filmsCount > 0) {
       let countCardsForRender = null;
       this._renderFilmsList(0, this._countCardInPage);
@@ -96,8 +115,8 @@ export default class MovieList {
   }
 
   _renderFilmDetails(index) {
-    this._filmDetails = new FilmDetailsElementView(this._allFilmsForView[index]);
-    this._comments = new CommentsView(this._allFilmsForView[index].comments);
+    this._filmDetails = new FilmDetailsElementView(this._getFilms().slice()[index]);
+    this._comments = new CommentsView(this._commentsList[index].getComments());
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
     this._setHendlersComment(this._comments, index);
@@ -118,7 +137,8 @@ export default class MovieList {
   }
 
   _editFilm(evt, index) {
-    this._allFilms = updateItem(this._allFilms, Object.assign({}, this._allFilmsForView[index], {[evt.target.name]: !this._allFilmsForView[index][evt.target.name]}));
+    let updatedFilm = updateItem(this._getFilms(), Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]}));
+    this._filmsModel.setFilms(updatedFilm);
     this._clearFilmList();
     this.init();
   }
@@ -141,6 +161,13 @@ export default class MovieList {
     }
   }
 
+  _renderFilter() {
+    const filmsSorted = filmsSort(this._getFilms());
+    this._filterMenu.setCounts(filmsSorted.watchlist.length, filmsSorted.watched.length, filmsSorted.favorites.length);
+    render(this._container, this._filterMenu, RenderPosition.BEFOREEND);
+    this._filterMenu.setClickHandler((evt) => this._handleFilterClick(evt));
+  }
+
   _renderSort() {
     render(this._container, this._sortMenu, RenderPosition.BEFOREEND);
     this._sortMenu.setClickHandler((evt) => this._handleSortClick(evt));
@@ -149,18 +176,16 @@ export default class MovieList {
   _handleSortClick(evt) {
     const typeSort = evt.target.getAttribute(`data-sort`);
     if (this._typeSort !== typeSort) {
-      this._sortingFilms(typeSort);
       this._typeSort = typeSort;
     }
+    this._clearFilmList();
+    this.init();
   }
 
-  _sortingFilms(typeSort) {
-    if (typeSort === `rating`) {
-      this._allFilms.sort((a, b) => a.rating > b.rating ? 1 : -1);
-    } else if (typeSort === `date`) {
-      this._allFilms.sort((a, b) => a.releaseDate > b.releaseDate ? 1 : -1);
-    } else {
-      this._allFilms = this._defaultAllFilms.slice();
+  _handleFilterClick(evt) {
+    const typeFilter = evt.target.getAttribute(`data-filter`);
+    if (this._typeFilter !== typeFilter) {
+      this._typeFilter = typeFilter;
     }
     this._clearFilmList();
     this.init();
@@ -168,9 +193,8 @@ export default class MovieList {
 
   _removeFilmComment(evt, index) {
     let commentId = evt.target.closest(`.film-details__comment`).getAttribute(`id`);
-    let commentInd = this._comments._comments.findIndex((item) => item.id === commentId);
-    this._comments._comments.splice(commentInd, 1);
-    this._updateComment(Object.assign({}, this._comments, {comments: this._comments.comments}), index);
+    this._commentsList[index].deleteComment(commentId);
+    this._updateComment(index);
   }
 
   _addFilmComment(evt) {
@@ -188,10 +212,9 @@ export default class MovieList {
     });
   }
 
-  _updateComment(updatedFilm, index) {
-    this._allFilms = updateItem(this._allFilms, updatedFilm);
+  _updateComment(index) {
     remove(this._comments);
-    this._comments = new CommentsView(this._allFilms[index].comments);
+    this._comments = new CommentsView(this._commentsList[index].getComments());
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
     this._setHendlersComment(this._comments, index);
   }
@@ -213,9 +236,8 @@ export default class MovieList {
         emoji: emoji(currentEmoji),
         commentDate: new Date(),
       };
-      this._comments._comments.push(newComment);
+      this._commentsList[index].addComment(newComment);
     }
-    this._updateComment(Object.assign({}, this._allFilmsForView[index]._comments, this._allFilmsForView[index].comments), index);
+    this._updateComment(index);
   }
-
 }

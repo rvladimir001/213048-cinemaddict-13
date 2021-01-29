@@ -38,3 +38,34 @@ export const emoji = (emotion) => {
 export const createEmojiLabel = (emotion) => {
   return `<img src="./images/emoji/${emoji(emotion)}" width="55" height="55" alt="emoji-${emotion}">`;
 };
+
+export const UserAction = {
+  UPDATE_FILM: `UPDATE_FILM`,
+  ADD_COMMENT: `ADD_COMMENT`,
+  DELETE_COMMENT: `DELETE_COMMENT`,
+};
+
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`,
+};
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
+};
+
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`
+};
+
+export const timeFormatting = (time) => {
+  let h = Math.trunc(time / 60);
+  let m = time % 60;
+  return `${h} h ${m} m`;
+};

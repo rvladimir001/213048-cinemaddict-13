@@ -1,4 +1,5 @@
 import Smart from "./smart";
+import {timeFormatting} from "../utils/films";
 
 const createFilmDetailsElement = (film) => {
   const createGenresTemlate = (genres) => {
@@ -52,7 +53,7 @@ const createFilmDetailsElement = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${film.runtime}</td>
+                  <td class="film-details__cell">${timeFormatting(film.runtime)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

@@ -2,6 +2,7 @@ import Smart from "./smart";
 import {createElement, render} from "../utils";
 import {RenderPosition} from "../utils/render";
 import {createEmojiLabel} from "../utils/films";
+import he from "he";
 
 
 export const createComments = (comments) => {
@@ -13,7 +14,7 @@ export const createComments = (comments) => {
                   <img src="./images/emoji/${comment.emoji}" width="55" height="55" alt="emoji-smile">
                 </span>
                 <div>
-                  <p class="film-details__comment-text">${comment.content}</p>
+                  <p class="film-details__comment-text">${he.encode(comment.content)}</p>
                   <p class="film-details__comment-info">
                     <span class="film-details__comment-author">${comment.author}</span>
                     <span class="film-details__comment-day">${comment.commentDate}</span>
