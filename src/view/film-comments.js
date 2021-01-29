@@ -2,7 +2,7 @@ import Smart from "./smart";
 import {createElement, render} from "../utils";
 import {RenderPosition} from "../utils/render";
 import {createEmojiLabel} from "../utils/films";
-import he from "he"
+import he from "he";
 
 
 export const createComments = (comments) => {
