@@ -3,7 +3,11 @@ import {createElement, render} from "../utils";
 import {RenderPosition} from "../utils/render";
 import {createEmojiLabel} from "../utils/films";
 import he from "he"
+import relativeTime from 'dayjs/plugin/relativeTime';
+import dayjs from "dayjs";
 
+
+dayjs.extend(relativeTime);
 
 export const createComments = (comments) => {
   const createCommentTemlate = (commentsList) => {
@@ -17,7 +21,7 @@ export const createComments = (comments) => {
                   <p class="film-details__comment-text">${he.encode(comment.content)}</p>
                   <p class="film-details__comment-info">
                     <span class="film-details__comment-author">${comment.author}</span>
-                    <span class="film-details__comment-day">${comment.commentDate}</span>
+                    <span class="film-details__comment-day">${dayjs().to(dayjs(comment.commentDate))}</span>
                     <button class="film-details__comment-delete">Delete</button>
                   </p>
                 </div>

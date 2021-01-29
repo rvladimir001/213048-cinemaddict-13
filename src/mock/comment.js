@@ -1,5 +1,5 @@
 import {nanoid} from 'nanoid';
-import {getRandomOneElementFromArray, getRandomInteger} from "./utils";
+import {getRandomOneElementFromArray, getRandomInteger, generateCommentDate} from "./utils";
 
 const authors = [
   `John Doe`,
@@ -22,22 +22,12 @@ const comments = [
   `Almost two hours? Seriously?`,
 ];
 
-const dates = [
-  `2 days ago`,
-  `3 days ago`,
-  `5 days ago`,
-  `Today `,
-  `2019/12/31 23:59`,
-  `2019/12/29 15:13`,
-  `2019/11/25 23:59`,
-];
-
 const generateComment = function () {
   return {
     id: nanoid(),
     author: getRandomOneElementFromArray(authors),
     emoji: getRandomOneElementFromArray(emojiList),
-    commentDate: getRandomOneElementFromArray(dates),
+    commentDate: generateCommentDate(),
     content: getRandomOneElementFromArray(comments),
   };
 };
