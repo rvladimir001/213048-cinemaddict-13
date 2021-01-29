@@ -12,6 +12,10 @@ export const generateReleaseDate = () => {
   return new Date(getRandomInteger(1930, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31));
 };
 
+export const generateCommentDate = () => {
+  return new Date(getRandomInteger(2019, 2021), getRandomInteger(0, 11), getRandomInteger(1, 31));
+};
+
 const months = [
   `January`,
   `February`,
