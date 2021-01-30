@@ -2,6 +2,7 @@ import Smart from "./smart";
 import {timeFormatting} from "../utils/films";
 
 const createFilmDetailsElement = (film) => {
+  console.log(film)
   const createGenresTemlate = (genres) => {
     let genresTemlate = ``;
     for (const item of genres) {
@@ -21,7 +22,7 @@ const createFilmDetailsElement = (film) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${film.poster}" alt="">
+              <img class="film-details__poster-img" src="${film.poster}" alt="">
               <p class="film-details__age">${film.category}</p>
             </div>
             <div class="film-details__info">
@@ -57,7 +58,7 @@ const createFilmDetailsElement = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
-                  <td class="film-details__cell">${film.country.join(`, `)}</td>
+                  <td class="film-details__cell">${film.country}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
