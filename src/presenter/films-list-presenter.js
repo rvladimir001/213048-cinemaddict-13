@@ -192,15 +192,15 @@ export default class MovieList {
     if (this._typeFilter !== typeFilter) {
       this._typeFilter = typeFilter;
     }
-    if(this._typeFilter === "stats") {
+    if (this._typeFilter === `stats`) {
       this._containerFilmsListComponent.hide();
       this._buttonShowMore.hide();
       this._sortMenu.hide();
       this._stats.show();
     } else {
       this._stats.hide();
-      this._containerFilmsListComponent.show()
-      this._sortMenu.show()
+      this._containerFilmsListComponent.show();
+      this._sortMenu.show();
       this._buttonShowMore.show();
     }
     this._clearFilmList();

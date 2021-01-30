@@ -181,7 +181,7 @@ export default class Stats extends Smart {
     this._currentPeriod = currentPeriod;
     this._user = user;
     this._chart = null;
-    this._data = {films: this._films, currentPeriod: this._currentPeriod, userTitle: this.user};
+    this._data = {films: this._films, currentPeriod: this._currentPeriod, userTitle: this._user};
     this._setChart();
     this._periodChangeHandler = this._periodChangeHandler.bind(this);
     this._setInnerHandler();
