@@ -2,7 +2,7 @@ import Smart from "./smart";
 
 const createStatTemplate = () => {
 console.log('createStatTemplate')
-  return (`<section class="statistic">
+  return (`<section class="statistic visually-hidden">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">

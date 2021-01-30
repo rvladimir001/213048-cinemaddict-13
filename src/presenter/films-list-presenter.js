@@ -16,6 +16,7 @@ import FilmsContainer from "../view/films-container";
 import {nanoid} from 'nanoid';
 import Comments from "../model/comments";
 import ListEmpty from "../view/list-empty";
+import Stats from "../view/stats";
 
 
 const FILM_COUNT_FOR_LIST = 5;
@@ -33,6 +34,7 @@ export default class MovieList {
     this._filterMenu = new ListEmpty();
     this._buttonShowMore = new ButtonShowMoreView();
     this._nomovies = new NoMoviesBlockView();
+    this._stats = new Stats();
     this._filmDetailsStatus = true;
     this._filmDetails = null;
     this._typeSort = `default`;
@@ -43,6 +45,7 @@ export default class MovieList {
 
   init() {
     this._renderFilter();
+    this._renderStats();
     this._renderSort();
     render(this._container, this._containerFilmsListComponent, RenderPosition.BEFOREEND);
     this._containerFilms = this._container.querySelector(`.films-list__container`);
@@ -187,8 +190,24 @@ export default class MovieList {
     if (this._typeFilter !== typeFilter) {
       this._typeFilter = typeFilter;
     }
+    if(this._typeFilter === "stats") {
+      this._containerFilmsListComponent.hide();
+      this._buttonShowMore.hide();
+      this._sortMenu.hide();
+      this._stats.show();
+    } else {
+      this._stats.hide();
+      this._containerFilmsListComponent.show()
+      this._sortMenu.show()
+      this._buttonShowMore.show();
+    }
     this._clearFilmList();
     this.init();
+  }
+
+  _renderStats(){
+    render(this._container, this._stats, RenderPosition.BEFOREEND);
+    // this._stats.hide();
   }
 
   _removeFilmComment(evt, index) {
