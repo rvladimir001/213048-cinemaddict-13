@@ -1,8 +1,8 @@
 import Smart from "./smart";
 
 const createStatTemplate = () => {
-
-  return `  <section class="statistic">
+console.log('createStatTemplate')
+  return (`<section class="statistic">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -47,7 +47,7 @@ const createStatTemplate = () => {
       <canvas class="statistic__chart" width="1000"></canvas>
     </div>
 
-  </section>`;
+  </section>`);
 };
 
 export default class Stats extends Smart {
@@ -56,6 +56,6 @@ export default class Stats extends Smart {
   }
 
   getTemplate() {
-    return createStatTemplate(this._data);
+    return createStatTemplate();
   }
 }
