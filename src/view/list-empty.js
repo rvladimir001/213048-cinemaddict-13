@@ -9,7 +9,7 @@ const createListEmptyTemplate = (watchlistCount, HistoryCount, favoritesCount) =
         <a href="#history" class="main-navigation__item" data-filter="history">History <span class="main-navigation__item-count">${HistoryCount}</span></a>
         <a href="#favorites" class="main-navigation__item" data-filter="favorites">Favorites <span class="main-navigation__item-count">${favoritesCount}</span></a>
       </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
+      <a href="#stats" class="main-navigation__additional" data-filter="stats">Stats</a>
     </nav>`
   );
 };
@@ -49,5 +49,6 @@ export default class ListEmpty extends Abstract {
     for (let link of this.getElement().querySelectorAll(`.main-navigation__items`)) {
       link.addEventListener(`click`, this._clickHandler);
     }
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, this._clickHandler);
   }
 }

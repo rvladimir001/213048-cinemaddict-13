@@ -10,6 +10,7 @@ import {
 } from "./utils.js";
 import {generateComments} from './comment.js';
 import {getRandomInteger} from "./utils";
+import dayjs from "dayjs";
 
 const FILM_COUNT = 15;
 
@@ -116,6 +117,8 @@ const category = [
 ];
 
 const generateFilm = () => {
+  const watched = getRandomBoolean();
+  const watchedDate = (watched) ? (dayjs().add(getRandomInteger(-30, 0), `days`)) : null;
   return {
     id: nanoid(),
     name: getRandomOneElementFromArray(films),
@@ -132,7 +135,8 @@ const generateFilm = () => {
     description: generatedDescription(TEXT),
     favorite: getRandomBoolean(),
     watchlist: getRandomBoolean(),
-    watched: getRandomBoolean(),
+    watched,
+    watchedDate,
     comments: generateComments(),
     category: getRandomOneElementFromArray(category),
   };
