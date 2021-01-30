@@ -13,10 +13,10 @@ const Period = {
 
 const getStatsDataForPeriod = {
   [Period.ALL_TIME]: (films) => films,
-  [Period.TODAY]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedData).isAfter(now.subtract(1, `day`))),
-  [Period.WEEK]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedData).isAfter(now.subtract(1, `week`))),
-  [Period.MONTH]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedData).isAfter(now.subtract(1, `month`))),
-  [Period.YEAR]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedData).isAfter(now.subtract(1, `year`)))
+  [Period.TODAY]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedDate).isAfter(now.subtract(1, `day`))),
+  [Period.WEEK]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedDate).isAfter(now.subtract(1, `week`))),
+  [Period.MONTH]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedDate).isAfter(now.subtract(1, `month`))),
+  [Period.YEAR]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedDate).isAfter(now.subtract(1, `year`)))
 };
 
 const getGenresStats = (films) => {
@@ -129,10 +129,10 @@ const renderChart = (statisticCtx, films) => {
   });
 };
 
-const createStatTemplate = (films, currentPeriod, userTitle) => {
+const createStatTemplate = (localData) => {
+  const {films, currentPeriod, userTitle} = localData;
   const filmsWatchedAmount = films.length;
   const {hours, minutes} = getTotal(films);
-  console.log(hours)
   const topGenre = getTopGenres(films);
   return (`<section class="statistic">
     <p class="statistic__rank">
@@ -181,13 +181,14 @@ export default class Stats extends Smart {
     this._currentPeriod = currentPeriod;
     this._user = user;
     this._chart = null;
+    this._data = {films: this._films, currentPeriod: this._currentPeriod, userTitle: this.user};
     this._setChart();
     this._periodChangeHandler = this._periodChangeHandler.bind(this);
     this._setInnerHandler();
   }
 
   getTemplate() {
-    return createStatTemplate(this._films, this._currentPeriod, this._user);
+    return createStatTemplate(this._data);
   }
 
   _periodChangeHandler(evt) {
@@ -215,6 +216,6 @@ export default class Stats extends Smart {
       this._chart = null;
     }
     const statistic = this.getElement().querySelector(`.statistic__chart`);
-    this._chart = renderChart(statistic, this._films);
+    this._chart = renderChart(statistic, this._data.films);
   }
 }
