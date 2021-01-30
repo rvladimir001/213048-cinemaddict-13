@@ -69,3 +69,19 @@ export const timeFormatting = (time) => {
   let m = time % 60;
   return `${h} h ${m} m`;
 };
+
+const UserStatus = {
+  NOVICE: `Novice`,
+  FAN: `Fan`,
+  MOVIE_BAFF: `Movie Buff`
+};
+
+export const profileRating = (count) => {
+  if (count > 1 && count <= 10) {
+    return UserStatus.NOVICE;
+  } else if (count > 10 && count <= 20) {
+    return UserStatus.FAN;
+  } else {
+    return UserStatus.MOVIE_BAFF;
+  }
+};

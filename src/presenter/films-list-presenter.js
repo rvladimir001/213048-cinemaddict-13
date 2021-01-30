@@ -9,7 +9,7 @@ import {
   closeFilmDetailsEsc,
   emoji,
   SortType,
-  filmsSort,
+  filmsSort, profileRating,
 } from "../utils/films";
 import SortMenu from "../view/sort-menu";
 import FilmsContainer from "../view/films-container";
@@ -34,7 +34,7 @@ export default class MovieList {
     this._filterMenu = new ListEmpty();
     this._buttonShowMore = new ButtonShowMoreView();
     this._nomovies = new NoMoviesBlockView();
-    this._stats = new Stats();
+    this._stats = null;
     this._filmDetailsStatus = true;
     this._filmDetails = null;
     this._typeSort = `default`;
@@ -45,7 +45,9 @@ export default class MovieList {
 
   init() {
     this._renderFilter();
-    this._renderStats();
+    this._stats = new Stats(this._filmsModel.getFilms().slice(), `ALL_TIME`, profileRating(this._filtersModel.getFilter().watched));
+    render(this._container, this._stats, RenderPosition.BEFOREEND);
+    this._stats.hide();
     this._renderSort();
     render(this._container, this._containerFilmsListComponent, RenderPosition.BEFOREEND);
     this._containerFilms = this._container.querySelector(`.films-list__container`);
@@ -205,10 +207,9 @@ export default class MovieList {
     this.init();
   }
 
-  _renderStats(){
-    render(this._container, this._stats, RenderPosition.BEFOREEND);
-    // this._stats.hide();
-  }
+  // _renderStats(){
+  //   render(this._container, this._stats, RenderPosition.BEFOREEND);
+  // }
 
   _removeFilmComment(evt, index) {
     let commentId = evt.target.closest(`.film-details__comment`).getAttribute(`id`);
