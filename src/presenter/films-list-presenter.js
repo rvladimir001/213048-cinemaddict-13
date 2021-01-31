@@ -7,8 +7,6 @@ import {Comments as CommentsView} from "../view/film-comments";
 import {
   closeFilmDetails,
   closeFilmDetailsEsc,
-  emoji,
-  SortType,
   filmsSort, profileRating,
 } from "../utils/films";
 import SortMenu from "../view/sort-menu";
@@ -17,6 +15,7 @@ import {nanoid} from 'nanoid';
 import Comments from "../model/comments";
 import ListEmpty from "../view/list-empty";
 import Stats from "../view/stats";
+import dayjs from "dayjs";
 
 
 const FILM_COUNT_FOR_LIST = 5;
@@ -26,7 +25,6 @@ export default class MovieList {
     this._filmsModel = filmsModel;
     this._filtersModel = filtersModel;
     this._container = container;
-    this._currentSortButton = SortType.DEFAULT;
     this._renderFilmsCount = FILM_COUNT_FOR_LIST;
     this._containerFilmsListComponent = new FilmsContainer();
     this._containerFilms = null;
@@ -146,7 +144,7 @@ export default class MovieList {
   }
 
   _setHendlersComment(comment, index) {
-    comment.setDeleteCommentHandler((evt) => this._removeFilmComment(evt, index));
+    comment.setDeleteCommentHandler((evt) => this._removeFilmComment(evt, comment, index));
     comment.setAddCommentHandler((evt) => this._addFilmComment(evt));
   }
 
@@ -218,10 +216,14 @@ export default class MovieList {
     this.init();
   }
 
-  _removeFilmComment(evt, index) {
+  _removeFilmComment(evt, comment, index) {
     let commentId = evt.target.closest(`.film-details__comment`).getAttribute(`id`);
     this._commentsList[index].deleteComment(commentId);
-    this._updateComment(index);
+    this._api.deleteComment(commentId).then((response) => {
+      if (response.ok) {
+        this._updateComment(index);
+      }
+    });
   }
 
   _addFilmComment(evt) {
@@ -260,11 +262,14 @@ export default class MovieList {
         id: nanoid(),
         content: text.value,
         author: `I'm`,
-        emoji: emoji(currentEmoji),
-        commentDate: new Date(),
+        emoji: currentEmoji,
+        commentDate: dayjs().format(),
       };
-      this._commentsList[index].addComment(newComment);
+      const film = this._getFilms()[index];
+      this._api.addComment(newComment, film).then(() => {
+        this._commentsList[index].addComment(newComment);
+        this._updateComment(index);
+      });
     }
-    this._updateComment(index);
   }
 }
