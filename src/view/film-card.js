@@ -12,11 +12,11 @@ export const createFilmCard = (film) => {
       <h3 class="film-card__title">${film.name}</h3>
       <p class="film-card__rating">${film.rating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">${film.releaseDate.getFullYear()}</span>
+        <span class="film-card__year">${film.releaseDate}</span>
         <span class="film-card__duration">${timeFormatting(film.runtime)}</span>
         <span class="film-card__genre">${film.genres[0]}</span>
       </p>
-      <img src="./images/posters/${film.poster}" alt="" class="film-card__poster">
+      <img src="${film.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${film.description.slice(0, 65)}...</p>
       <a class="film-card__comments">${film.comments.length} comments</a>
     </div>

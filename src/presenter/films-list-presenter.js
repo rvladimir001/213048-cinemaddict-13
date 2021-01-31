@@ -1,4 +1,4 @@
-import {remove, render, RenderPosition, updateItem} from "../utils/render";
+import {remove, render, RenderPosition} from "../utils/render";
 import {ButtonShowMore as ButtonShowMoreView} from "../view/button-show-more";
 import {NoMoviesBlock as NoMoviesBlockView} from "../view/no-movies";
 import {FilmCard as FilmCardView} from "../view/film-card";
@@ -22,7 +22,7 @@ import Stats from "../view/stats";
 const FILM_COUNT_FOR_LIST = 5;
 
 export default class MovieList {
-  constructor(container, filmsModel, filtersModel) {
+  constructor(container, filmsModel, filtersModel, api) {
     this._filmsModel = filmsModel;
     this._filtersModel = filtersModel;
     this._container = container;
@@ -41,6 +41,7 @@ export default class MovieList {
     this._typeFilter = `all`;
     this._countCardInPage = 5;
     this._commentsList = [];
+    this._api = api;
   }
 
   init() {
@@ -120,11 +121,19 @@ export default class MovieList {
   }
 
   _renderFilmDetails(index) {
-    this._filmDetails = new FilmDetailsElementView(this._getFilms().slice()[index]);
-    this._comments = new CommentsView(this._commentsList[index].getComments());
+    const currentFilm = this._getFilms().slice()[index];
+    this._filmDetails = new FilmDetailsElementView(currentFilm);
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
-    render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
-    this._setHendlersComment(this._comments, index);
+    this._api.getComments(currentFilm.id).then((comments) => {
+      this._commentsList[index].setComments(comments);
+    }).then(() => {
+      this._comments = new CommentsView(this._commentsList[index].getComments());
+      render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
+      this._setHendlersComment(this._comments, index);
+    })
+      .catch(() => {
+        this._commentsList[index].setComments([]);
+      });
     this._handleFormSubmit(index);
     this._filmDetails.setClickHandler(() => this._close());
     document.addEventListener(`keydown`, (evt) => {
@@ -142,10 +151,12 @@ export default class MovieList {
   }
 
   _editFilm(evt, index) {
-    let updatedFilm = updateItem(this._getFilms(), Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]}));
-    this._filmsModel.setFilms(updatedFilm);
-    this._clearFilmList();
-    this.init();
+    let updatedFilm = Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]});
+    this._api.updateFilm(updatedFilm).then((update) => {
+      this._filmsModel.updateFilm(update);
+      this._clearFilmList();
+      this.init();
+    });
   }
 
   _close() {
@@ -206,10 +217,6 @@ export default class MovieList {
     this._clearFilmList();
     this.init();
   }
-
-  // _renderStats(){
-  //   render(this._container, this._stats, RenderPosition.BEFOREEND);
-  // }
 
   _removeFilmComment(evt, index) {
     let commentId = evt.target.closest(`.film-details__comment`).getAttribute(`id`);

@@ -54,14 +54,14 @@ export const UpdateType = {
 export const SortType = {
   DEFAULT: `default`,
   DATE: `date`,
-  RATING: `rating`
+  RATING: `rating`,
 };
 
 export const FilterType = {
   ALL: `all`,
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
-  FAVORITES: `favorites`
+  FAVORITES: `favorites`,
 };
 
 export const timeFormatting = (time) => {
@@ -73,7 +73,7 @@ export const timeFormatting = (time) => {
 const UserStatus = {
   NOVICE: `Novice`,
   FAN: `Fan`,
-  MOVIE_BAFF: `Movie Buff`
+  MOVIE_BAFF: `Movie Buff`,
 };
 
 export const profileRating = (count) => {
@@ -85,3 +85,17 @@ export const profileRating = (count) => {
     return UserStatus.MOVIE_BAFF;
   }
 };
+
+export const month = [
+  `January`,
+  `February`,
+  `March`,
+  `April`,
+  `May`,
+  `June`,
+  `July`,
+  `August`,
+  `September`,
+  `November`,
+  `December`,
+];
