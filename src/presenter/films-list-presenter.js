@@ -126,6 +126,7 @@ export default class MovieList {
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
     this._api.getComments(currentFilm.id).then((comments) => {
       this._commentsList[index].setComments(comments);
+    }).then(() => {
       this._comments = new CommentsView(this._commentsList[index].getComments());
       render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
       this._setHendlersComment(this._comments, index);
@@ -150,10 +151,12 @@ export default class MovieList {
   }
 
   _editFilm(evt, index) {
-    let updatedFilm = updateItem(this._getFilms(), Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]}));
-    this._filmsModel.setFilms(updatedFilm);
-    this._clearFilmList();
-    this.init();
+    let updatedFilm = Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]});
+    this._api.updateFilm(updatedFilm).then((update) => {
+      this._filmsModel.updateFilm(update);
+      this._clearFilmList();
+      this.init();
+    });
   }
 
   _close() {
@@ -214,10 +217,6 @@ export default class MovieList {
     this._clearFilmList();
     this.init();
   }
-
-  // _renderStats(){
-  //   render(this._container, this._stats, RenderPosition.BEFOREEND);
-  // }
 
   _removeFilmComment(evt, index) {
     let commentId = evt.target.closest(`.film-details__comment`).getAttribute(`id`);

@@ -16,9 +16,8 @@ export default class Films extends Observer {
     return this._films;
   }
 
-  updateFilm(updateType, update) {
+  updateFilm(update) {
     const index = this._films.findIndex((movie) => movie.id === update.id);
-
     if (index === -1) {
       throw new Error(`Не возможно обновить фильм`);
     }
@@ -29,13 +28,13 @@ export default class Films extends Observer {
       ...this._films.slice(index + 1),
     ];
 
-    this._notify(updateType, update);
+    this._notify(update);
   }
 
   static adapterToClient(film) {
     const filmDate = new Date(film.film_info.release.date);
     const releaseDate = filmDate.getFullYear();
-    const releaseFullDate = `${filmDate.getDay()} ${month[filmDate.getMonth()]} ${filmDate.getFullYear()}`;
+    const releaseFullDate = `${filmDate.getDay()+1} ${month[filmDate.getMonth()]} ${filmDate.getFullYear()}`;
     const adaptedFilm = Object.assign({}, film, {
       actors: film.film_info.actors,
       category: film.film_info.age_rating,
@@ -59,6 +58,63 @@ export default class Films extends Observer {
 
     delete adaptedFilm.film_info;
     delete adaptedFilm.user_details;
+    return adaptedFilm;
+  }
+
+
+  static adapterToServer(film) {
+    const adaptedFilm = Object.assign(
+      {},
+      film,
+      {
+        "film_info": {
+          "actors": film.actors,
+          "age_rating": film.category,
+          "alternative_title": film.originTitle,
+          "description": film.description,
+          "director": film.director,
+          "genre": film.genres,
+          "poster": film.poster,
+          "release": {
+            "date": new Date(film.releaseFullDate),
+            "release_country": film.country,
+          },
+          "runtime": film.runtime,
+          "title": film.name,
+          "total_rating": film.rating,
+          "writers": film.writers,
+        },
+        "user_details": {
+          "watchlist": film.watchlist,
+          "already_watched": film.watched,
+          "favorite": film.favorite,
+          "watching_date": film.watchedDate,
+        },
+      },
+    );
+
+    delete adaptedFilm.runtime;
+    delete adaptedFilm.releaseFullDate;
+    delete adaptedFilm.originTitle;
+    delete adaptedFilm.poster;
+    delete adaptedFilm.category;
+    delete adaptedFilm.name;
+    delete adaptedFilm.actors;
+    delete adaptedFilm.age;
+    delete adaptedFilm.info;
+    delete adaptedFilm.description;
+    delete adaptedFilm.director;
+    delete adaptedFilm.genres;
+    delete adaptedFilm.releaseDate;
+    delete adaptedFilm.country;
+    delete adaptedFilm.time;
+    delete adaptedFilm.rating;
+    delete adaptedFilm.writers;
+    delete adaptedFilm.watchlist;
+    delete adaptedFilm.watched;
+    delete adaptedFilm.favorite;
+    delete adaptedFilm.watchedDate;
+
     return adaptedFilm;
   }
 }

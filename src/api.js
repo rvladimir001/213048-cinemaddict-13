@@ -33,11 +33,11 @@ export default class Api {
     return this._load({
       url: `movies/${film.id}`,
       method: Method.PUT,
-      body: JSON.stringify(Films.adaptToServer(film)),
+      body: JSON.stringify(Films.adapterToServer(film)),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then(Api.toJSON)
-      .then(Films.adaptToClient);
+      .then(Films.adapterToClient);
   }
 
   _load({
