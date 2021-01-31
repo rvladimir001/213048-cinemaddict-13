@@ -23,7 +23,7 @@ const filtersModel = new FiltersModel();
 const filmsModel = new Films();
 
 
-const filmsPresentor = new MovieList(siteMainElement, filmsModel, filtersModel);
+const filmsPresentor = new MovieList(siteMainElement, filmsModel, filtersModel, api);
 api.getFilms().then((films) => {
   filmsModel.setFilms(films);
 }).catch(() => {

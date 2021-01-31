@@ -22,7 +22,7 @@ import Stats from "../view/stats";
 const FILM_COUNT_FOR_LIST = 5;
 
 export default class MovieList {
-  constructor(container, filmsModel, filtersModel) {
+  constructor(container, filmsModel, filtersModel, api) {
     this._filmsModel = filmsModel;
     this._filtersModel = filtersModel;
     this._container = container;
@@ -41,6 +41,7 @@ export default class MovieList {
     this._typeFilter = `all`;
     this._countCardInPage = 5;
     this._commentsList = [];
+    this._api = api;
   }
 
   init() {
@@ -120,11 +121,18 @@ export default class MovieList {
   }
 
   _renderFilmDetails(index) {
-    this._filmDetails = new FilmDetailsElementView(this._getFilms().slice()[index]);
-    this._comments = new CommentsView(this._commentsList[index].getComments());
+    const currentFilm = this._getFilms().slice()[index];
+    this._filmDetails = new FilmDetailsElementView(currentFilm);
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
-    render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
-    this._setHendlersComment(this._comments, index);
+    this._api.getComments(currentFilm.id).then((comments) => {
+      this._commentsList[index].setComments(comments);
+      this._comments = new CommentsView(this._commentsList[index].getComments());
+      render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
+      this._setHendlersComment(this._comments, index);
+    })
+      .catch(() => {
+        this._commentsList[index].setComments([]);
+      });
     this._handleFormSubmit(index);
     this._filmDetails.setClickHandler(() => this._close());
     document.addEventListener(`keydown`, (evt) => {

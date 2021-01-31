@@ -87,15 +87,15 @@ export const profileRating = (count) => {
 };
 
 export const month = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'November',
-  'December',
+  `January`,
+  `February`,
+  `March`,
+  `April`,
+  `May`,
+  `June`,
+  `July`,
+  `August`,
+  `September`,
+  `November`,
+  `December`,
 ];

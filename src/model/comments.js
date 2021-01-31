@@ -36,4 +36,19 @@ export default class Comments extends Observer {
     ];
     this._notify();
   }
+
+  static adapterToClient(comment) {
+    const commentDate = new Date(comment.date);
+    const adaptedComment = Object.assign({}, comment, {
+      emoji: comment.emotion,
+      commentDate,
+      content: comment.comment,
+    });
+
+    delete adaptedComment.comment;
+    delete adaptedComment.emotion;
+    delete adaptedComment.date;
+    return adaptedComment;
+  }
+
 }

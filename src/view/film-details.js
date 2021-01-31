@@ -2,7 +2,6 @@ import Smart from "./smart";
 import {timeFormatting} from "../utils/films";
 
 const createFilmDetailsElement = (film) => {
-  console.log(film)
   const createGenresTemlate = (genres) => {
     let genresTemlate = ``;
     for (const item of genres) {
