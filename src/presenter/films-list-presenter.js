@@ -223,7 +223,7 @@ export default class MovieList {
     const commentId = commentElem.getAttribute(`id`);
     deleteLink.setAttribute(`disabled`, `disabled`);
     deleteLink.textContent = `Deleting…`;
-    if(commentElem.classList.contains(`shake`)){
+    if (commentElem.classList.contains(`shake`)) {
       commentElem.classList.remove(`shake`);
     }
     this._api.deleteComment(commentId).then((response) => {
@@ -232,7 +232,7 @@ export default class MovieList {
         this._updateComment(index);
       }
     }).catch(() => {
-      deleteLink.removeAttribute(`disabled`)
+      deleteLink.removeAttribute(`disabled`);
       commentElem.classList.add(`shake`);
     }).finally(() => {
       deleteLink.textContent = `Delete`;
@@ -264,9 +264,9 @@ export default class MovieList {
   submitComments(index) {
     const text = this._comments.getElement().querySelector(`.film-details__comment-input`);
     const emotions = document.querySelectorAll(`.film-details__emoji-item`);
-    const submitForm = document.querySelector(`form.film-details__inner`)
+    const submitForm = document.querySelector(`form.film-details__inner`);
     text.setAttribute(`disabled`, `disabled`);
-    if(submitForm.classList.contains(`shake`)){
+    if (submitForm.classList.contains(`shake`)) {
       submitForm.classList.remove(`shake`);
     }
     let currentEmoji;
@@ -288,8 +288,8 @@ export default class MovieList {
         this._commentsList[index].addComment(newComment);
       }).then(() => {
         this._updateComment(index);
-      }).catch(()=>{
-        submitForm.classList.add(`shake`)
+      }).catch(() => {
+        submitForm.classList.add(`shake`);
       }).finally(() => {
         text.removeAttribute(`disabled`);
       });
