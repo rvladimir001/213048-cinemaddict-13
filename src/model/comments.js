@@ -37,6 +37,7 @@ export default class Comments extends Observer {
     this._notify();
   }
 
+
   static adapterToClient(comment) {
     const commentDate = new Date(comment.date);
     const adaptedComment = Object.assign({}, comment, {
@@ -48,7 +49,38 @@ export default class Comments extends Observer {
     delete adaptedComment.comment;
     delete adaptedComment.emotion;
     delete adaptedComment.date;
+
     return adaptedComment;
   }
 
+
+  static adaptToServer(comment) {
+    const adaptedComment = Object.assign({}, comment, {
+      comment: comment.content,
+      emotion: comment.emoji,
+      date: comment.commentDate,
+    });
+    delete adaptedComment.content;
+    delete adaptedComment.commentDate;
+    delete adaptedComment.emoji;
+
+    return adaptedComment;
+  }
+
+  static adaptToClientAddCommented(update) {
+    const updatedComment = [];
+    update.comments.map((comment) => {
+      comment = Object.assign({}, comment, {
+        info: {
+          author: comment.author,
+          text: comment.comment,
+          emotion: comment.emoji,
+        },
+      });
+      delete comment.author;
+      delete comment.comment;
+      delete comment.emotion;
+      updatedComment.push(comment);
+    });
+  }
 }
