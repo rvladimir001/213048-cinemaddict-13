@@ -1,4 +1,4 @@
-import {remove, render, RenderPosition, updateItem} from "../utils/render";
+import {remove, render, RenderPosition} from "../utils/render";
 import {ButtonShowMore as ButtonShowMoreView} from "../view/button-show-more";
 import {NoMoviesBlock as NoMoviesBlockView} from "../view/no-movies";
 import {FilmCard as FilmCardView} from "../view/film-card";

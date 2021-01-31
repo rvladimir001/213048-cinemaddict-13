@@ -34,7 +34,7 @@ export default class Films extends Observer {
   static adapterToClient(film) {
     const filmDate = new Date(film.film_info.release.date);
     const releaseDate = filmDate.getFullYear();
-    const releaseFullDate = `${filmDate.getDay()+1} ${month[filmDate.getMonth()]} ${filmDate.getFullYear()}`;
+    const releaseFullDate = `${filmDate.getDay() + 1} ${month[filmDate.getMonth()]} ${filmDate.getFullYear()}`;
     const adaptedFilm = Object.assign({}, film, {
       actors: film.film_info.actors,
       category: film.film_info.age_rating,
@@ -61,37 +61,32 @@ export default class Films extends Observer {
     return adaptedFilm;
   }
 
-
   static adapterToServer(film) {
-    const adaptedFilm = Object.assign(
-      {},
-      film,
-      {
-        "film_info": {
-          "actors": film.actors,
-          "age_rating": film.category,
-          "alternative_title": film.originTitle,
-          "description": film.description,
-          "director": film.director,
-          "genre": film.genres,
-          "poster": film.poster,
-          "release": {
-            "date": new Date(film.releaseFullDate),
-            "release_country": film.country,
-          },
-          "runtime": film.runtime,
-          "title": film.name,
-          "total_rating": film.rating,
-          "writers": film.writers,
+    const adaptedFilm = Object.assign({}, film, {
+      "film_info": {
+        "actors": film.actors,
+        "age_rating": film.category,
+        "alternative_title": film.originTitle,
+        "description": film.description,
+        "director": film.director,
+        "genre": film.genres,
+        "poster": film.poster,
+        "release": {
+          "date": new Date(film.releaseFullDate),
+          "release_country": film.country,
         },
-        "user_details": {
-          "watchlist": film.watchlist,
-          "already_watched": film.watched,
-          "favorite": film.favorite,
-          "watching_date": film.watchedDate,
-        },
+        "runtime": film.runtime,
+        "title": film.name,
+        "total_rating": film.rating,
+        "writers": film.writers,
       },
-    );
+      "user_details": {
+        "watchlist": film.watchlist,
+        "already_watched": film.watched,
+        "favorite": film.favorite,
+        "watching_date": film.watchedDate,
+      },
+    });
 
     delete adaptedFilm.runtime;
     delete adaptedFilm.releaseFullDate;
