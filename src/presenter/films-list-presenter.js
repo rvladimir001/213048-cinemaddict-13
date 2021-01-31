@@ -126,7 +126,8 @@ export default class MovieList {
       this._commentsList[index].setComments(comments);
     }).then(() => {
       this._comments = new CommentsView(this._commentsList[index].getComments());
-      render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
+      const commentsContainer = this._filmDetails.getElement().querySelector(`.film-details__bottom-container`);
+      render(commentsContainer, this._comments, RenderPosition.BEFOREEND);
       this._setHendlersComment(this._comments, index);
     })
       .catch(() => {
@@ -217,12 +218,24 @@ export default class MovieList {
   }
 
   _removeFilmComment(evt, comment, index) {
-    let commentId = evt.target.closest(`.film-details__comment`).getAttribute(`id`);
-    this._commentsList[index].deleteComment(commentId);
+    const deleteLink = evt.target;
+    const commentElem = deleteLink.closest(`.film-details__comment`);
+    const commentId = commentElem.getAttribute(`id`);
+    deleteLink.setAttribute(`disabled`, `disabled`);
+    deleteLink.textContent = `Deleting…`;
+    if(commentElem.classList.contains(`shake`)){
+      commentElem.classList.remove(`shake`);
+    }
     this._api.deleteComment(commentId).then((response) => {
       if (response.ok) {
+        this._commentsList[index].deleteComment(commentId);
         this._updateComment(index);
       }
+    }).catch(() => {
+      deleteLink.removeAttribute(`disabled`)
+      commentElem.classList.add(`shake`);
+    }).finally(() => {
+      deleteLink.textContent = `Delete`;
     });
   }
 
@@ -249,8 +262,13 @@ export default class MovieList {
   }
 
   submitComments(index) {
-    let text = this._comments.getElement().querySelector(`.film-details__comment-input`);
+    const text = this._comments.getElement().querySelector(`.film-details__comment-input`);
     const emotions = document.querySelectorAll(`.film-details__emoji-item`);
+    const submitForm = document.querySelector(`form.film-details__inner`)
+    text.setAttribute(`disabled`, `disabled`);
+    if(submitForm.classList.contains(`shake`)){
+      submitForm.classList.remove(`shake`);
+    }
     let currentEmoji;
     for (let emotion of emotions) {
       if (emotion.checked) {
@@ -268,7 +286,12 @@ export default class MovieList {
       const film = this._getFilms()[index];
       this._api.addComment(newComment, film).then(() => {
         this._commentsList[index].addComment(newComment);
+      }).then(() => {
         this._updateComment(index);
+      }).catch(()=>{
+        submitForm.classList.add(`shake`)
+      }).finally(() => {
+        text.removeAttribute(`disabled`);
       });
     }
   }
