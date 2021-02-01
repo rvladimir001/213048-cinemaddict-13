@@ -45,17 +45,6 @@ export const UserAction = {
   DELETE_COMMENT: `DELETE_COMMENT`,
 };
 
-export const UpdateType = {
-  PATCH: `PATCH`,
-  MINOR: `MINOR`,
-  MAJOR: `MAJOR`,
-};
-
-export const SortType = {
-  DEFAULT: `default`,
-  DATE: `date`,
-  RATING: `rating`,
-};
 
 export const FilterType = {
   ALL: `all`,

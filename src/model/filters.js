@@ -16,6 +16,10 @@ export default class FiltersModel extends Observer {
     return this._filter;
   }
 
+  getWatched(films) {
+    return films.filter((film) => film.watched);
+  }
+
   filterFilms(films) {
     switch (this._filter) {
       case FilterType.WATCHLIST:
