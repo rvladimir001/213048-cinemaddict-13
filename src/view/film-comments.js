@@ -5,6 +5,7 @@ import {createEmojiLabel} from "../utils/films";
 import he from "he";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
+
 dayjs.extend(relativeTime);
 
 export const createComments = (comments) => {
@@ -115,4 +116,13 @@ export class Comments extends Smart {
       i.addEventListener(`change`, this._addCommentEmotion);
     }
   }
+
+  setDisabledForm() {
+    return this.getElement().querySelector(`.film-details__comment-input`).setAttribute(`disabled`, `disabled`);
+  }
+
+  removeDisabledForm() {
+    return this.getElement().querySelector(`.film-details__comment-input`).removeAttribute(`disabled`, `disabled`);
+  }
+
 }
