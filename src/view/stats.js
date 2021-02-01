@@ -130,7 +130,7 @@ const renderChart = (statisticCtx, films) => {
 };
 
 const createStatTemplate = (localData) => {
-  const {films, currentPeriod, userTitle} = localData;
+  const {films, currentPeriod, user} = localData;
   const filmsWatchedAmount = films.length;
   const {hours, minutes} = getTotal(films);
   const topGenre = getTopGenres(films);
@@ -138,7 +138,7 @@ const createStatTemplate = (localData) => {
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">${userTitle}</span>
+      <span class="statistic__rank-label">${user}</span>
     </p>
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
@@ -176,12 +176,13 @@ const createStatTemplate = (localData) => {
 
 export default class Stats extends Smart {
   constructor(films, currentPeriod, user) {
+    console.log("user", user)
     super();
     this._films = films;
     this._currentPeriod = currentPeriod;
     this._user = user;
     this._chart = null;
-    this._data = {films: this._films, currentPeriod: this._currentPeriod, userTitle: this._user};
+    this._data = {films: this._films, currentPeriod: this._currentPeriod, user: this._user};
     this._setChart();
     this._periodChangeHandler = this._periodChangeHandler.bind(this);
     this._setInnerHandler();

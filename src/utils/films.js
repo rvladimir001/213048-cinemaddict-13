@@ -45,17 +45,6 @@ export const UserAction = {
   DELETE_COMMENT: `DELETE_COMMENT`,
 };
 
-export const UpdateType = {
-  PATCH: `PATCH`,
-  MINOR: `MINOR`,
-  MAJOR: `MAJOR`,
-};
-
-export const SortType = {
-  DEFAULT: `default`,
-  DATE: `date`,
-  RATING: `rating`,
-};
 
 export const FilterType = {
   ALL: `all`,
@@ -77,6 +66,7 @@ const UserStatus = {
 };
 
 export const profileRating = (count) => {
+  console.log("count", count)
   if (count > 1 && count <= 10) {
     return UserStatus.NOVICE;
   } else if (count > 10 && count <= 20) {

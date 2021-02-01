@@ -44,7 +44,8 @@ export default class MovieList {
 
   init() {
     this._renderFilter();
-    this._stats = new Stats(this._filmsModel.getFilms().slice(), `ALL_TIME`, profileRating(this._filtersModel.getFilter().watched));
+    const watchedCount = this._filtersModel.getWatched(this._filmsModel.getFilms().slice()).length
+    this._stats = new Stats(this._filmsModel.getFilms().slice(), `ALL_TIME`, profileRating(watchedCount));
     render(this._container, this._stats, RenderPosition.BEFOREEND);
     this._stats.hide();
     this._renderSort();
