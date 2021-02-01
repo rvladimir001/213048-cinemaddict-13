@@ -7,8 +7,6 @@ import {Comments as CommentsView} from "../view/film-comments";
 import {
   closeFilmDetails,
   closeFilmDetailsEsc,
-  emoji,
-  SortType,
   filmsSort, profileRating,
 } from "../utils/films";
 import SortMenu from "../view/sort-menu";
@@ -17,6 +15,7 @@ import {nanoid} from 'nanoid';
 import Comments from "../model/comments";
 import ListEmpty from "../view/list-empty";
 import Stats from "../view/stats";
+import dayjs from "dayjs";
 
 
 const FILM_COUNT_FOR_LIST = 5;
@@ -26,7 +25,6 @@ export default class MovieList {
     this._filmsModel = filmsModel;
     this._filtersModel = filtersModel;
     this._container = container;
-    this._currentSortButton = SortType.DEFAULT;
     this._renderFilmsCount = FILM_COUNT_FOR_LIST;
     this._containerFilmsListComponent = new FilmsContainer();
     this._containerFilms = null;
@@ -128,7 +126,8 @@ export default class MovieList {
       this._commentsList[index].setComments(comments);
     }).then(() => {
       this._comments = new CommentsView(this._commentsList[index].getComments());
-      render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
+      const commentsContainer = this._filmDetails.getElement().querySelector(`.film-details__bottom-container`);
+      render(commentsContainer, this._comments, RenderPosition.BEFOREEND);
       this._setHendlersComment(this._comments, index);
     })
       .catch(() => {
@@ -146,7 +145,7 @@ export default class MovieList {
   }
 
   _setHendlersComment(comment, index) {
-    comment.setDeleteCommentHandler((evt) => this._removeFilmComment(evt, index));
+    comment.setDeleteCommentHandler((evt) => this._removeFilmComment(evt, comment, index));
     comment.setAddCommentHandler((evt) => this._addFilmComment(evt));
   }
 
@@ -199,29 +198,45 @@ export default class MovieList {
   }
 
   _handleFilterClick(evt) {
+    this._stats.hide();
+    this._buttonShowMore.hide();
     const typeFilter = evt.target.getAttribute(`data-filter`);
     if (this._typeFilter !== typeFilter) {
       this._typeFilter = typeFilter;
+      this._handleSortClick(evt);
+      this._stats.hide();
+      this._containerFilmsListComponent.show();
+      this._sortMenu.show();
+      this._buttonShowMore.show();
     }
     if (this._typeFilter === `stats`) {
       this._containerFilmsListComponent.hide();
       this._buttonShowMore.hide();
       this._sortMenu.hide();
       this._stats.show();
-    } else {
-      this._stats.hide();
-      this._containerFilmsListComponent.show();
-      this._sortMenu.show();
-      this._buttonShowMore.show();
     }
-    this._clearFilmList();
-    this.init();
   }
 
-  _removeFilmComment(evt, index) {
-    let commentId = evt.target.closest(`.film-details__comment`).getAttribute(`id`);
-    this._commentsList[index].deleteComment(commentId);
-    this._updateComment(index);
+  _removeFilmComment(evt, comment, index) {
+    const deleteLink = evt.target;
+    const commentElem = deleteLink.closest(`.film-details__comment`);
+    const commentId = commentElem.getAttribute(`id`);
+    deleteLink.setAttribute(`disabled`, `disabled`);
+    deleteLink.textContent = `Deleting…`;
+    if (commentElem.classList.contains(`shake`)) {
+      commentElem.classList.remove(`shake`);
+    }
+    this._api.deleteComment(commentId).then((response) => {
+      if (response.ok) {
+        this._commentsList[index].deleteComment(commentId);
+        this._updateComment(index);
+      }
+    }).catch(() => {
+      deleteLink.removeAttribute(`disabled`);
+      commentElem.classList.add(`shake`);
+    }).finally(() => {
+      deleteLink.textContent = `Delete`;
+    });
   }
 
   _addFilmComment(evt) {
@@ -247,8 +262,13 @@ export default class MovieList {
   }
 
   submitComments(index) {
-    let text = this._comments.getElement().querySelector(`.film-details__comment-input`);
+    const text = this._comments.getElement().querySelector(`.film-details__comment-input`);
     const emotions = document.querySelectorAll(`.film-details__emoji-item`);
+    const submitForm = document.querySelector(`form.film-details__inner`);
+    text.setAttribute(`disabled`, `disabled`);
+    if (submitForm.classList.contains(`shake`)) {
+      submitForm.classList.remove(`shake`);
+    }
     let currentEmoji;
     for (let emotion of emotions) {
       if (emotion.checked) {
@@ -260,11 +280,19 @@ export default class MovieList {
         id: nanoid(),
         content: text.value,
         author: `I'm`,
-        emoji: emoji(currentEmoji),
-        commentDate: new Date(),
+        emoji: currentEmoji,
+        commentDate: dayjs().format(),
       };
-      this._commentsList[index].addComment(newComment);
+      const film = this._getFilms()[index];
+      this._api.addComment(newComment, film).then(() => {
+        this._commentsList[index].addComment(newComment);
+      }).then(() => {
+        this._updateComment(index);
+      }).catch(() => {
+        submitForm.classList.add(`shake`);
+      }).finally(() => {
+        text.removeAttribute(`disabled`);
+      });
     }
-    this._updateComment(index);
   }
 }
