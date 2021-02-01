@@ -16,7 +16,7 @@ export default class FiltersModel extends Observer {
     return this._filter;
   }
 
-  getWatched(films){
+  getWatched(films) {
     return films.filter((film) => film.watched);
   }
 

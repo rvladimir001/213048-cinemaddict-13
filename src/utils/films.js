@@ -66,7 +66,6 @@ const UserStatus = {
 };
 
 export const profileRating = (count) => {
-  console.log("count", count)
   if (count > 1 && count <= 10) {
     return UserStatus.NOVICE;
   } else if (count > 10 && count <= 20) {

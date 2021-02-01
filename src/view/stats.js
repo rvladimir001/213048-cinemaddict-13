@@ -176,7 +176,6 @@ const createStatTemplate = (localData) => {
 
 export default class Stats extends Smart {
   constructor(films, currentPeriod, user) {
-    console.log("user", user)
     super();
     this._films = films;
     this._currentPeriod = currentPeriod;
