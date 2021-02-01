@@ -8,7 +8,7 @@ const Period = {
   TODAY: `today`,
   WEEK: `week`,
   MONTH: `month`,
-  YEAR: `year`
+  YEAR: `year`,
 };
 
 const getStatsDataForPeriod = {
@@ -16,7 +16,7 @@ const getStatsDataForPeriod = {
   [Period.TODAY]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedDate).isAfter(now.subtract(1, `day`))),
   [Period.WEEK]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedDate).isAfter(now.subtract(1, `week`))),
   [Period.MONTH]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedDate).isAfter(now.subtract(1, `month`))),
-  [Period.YEAR]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedDate).isAfter(now.subtract(1, `year`)))
+  [Period.YEAR]: (films, now = dayjs()) => films.filter((film) => dayjs(film.watchedDate).isAfter(now.subtract(1, `year`))),
 };
 
 const getGenresStats = (films) => {
@@ -80,52 +80,52 @@ const renderChart = (statisticCtx, films) => {
         data: counts,
         backgroundColor: `#ffe800`,
         hoverBackgroundColor: `#ffe800`,
-        anchor: `start`
-      }]
+        anchor: `start`,
+      }],
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: 20
+            size: 20,
           },
           color: `#ffffff`,
           anchor: `start`,
           align: `start`,
           offset: 40,
-        }
+        },
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: `#ffffff`,
             padding: 100,
-            fontSize: 20
+            fontSize: 20,
           },
           gridLines: {
             display: false,
-            drawBorder: false
+            drawBorder: false,
           },
-          barThickness: 24
+          barThickness: 24,
         }],
         xAxes: [{
           ticks: {
             display: false,
-            beginAtZero: true
+            beginAtZero: true,
           },
           gridLines: {
             display: false,
-            drawBorder: false
+            drawBorder: false,
           },
         }],
       },
       legend: {
-        display: false
+        display: false,
       },
       tooltips: {
-        enabled: false
-      }
-    }
+        enabled: false,
+      },
+    },
   });
 };
 
@@ -199,7 +199,12 @@ export default class Stats extends Smart {
     }
     this._currentPeriod = newPeriod;
     const filteredFilms = getStatsDataForPeriod[this._currentPeriod](this._films);
-    this.updateData({films: filteredFilms, currentPeriod: this._currentPeriod});
+    this.updateStatsData({films: filteredFilms, currentPeriod: this._currentPeriod});
+  }
+
+  updateStatsData(date) {
+    this._data = Object.assign({}, this._film, date);
+    this.updateElement();
   }
 
   _setInnerHandler() {
