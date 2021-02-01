@@ -1,4 +1,5 @@
 import Observer from "../utils/observer.js";
+import {month} from "../utils/films";
 
 export default class Comments extends Observer {
   constructor() {
@@ -70,17 +71,48 @@ export default class Comments extends Observer {
   static adaptToClientAddCommented(update) {
     const updatedComment = [];
     update.comments.map((comment) => {
-      comment = Object.assign({}, comment, {
-        info: {
-          author: comment.author,
-          text: comment.comment,
-          emotion: comment.emoji,
-        },
+      const commentDate = new Date(comment.date);
+      const adaptedComment = Object.assign({}, comment, {
+        emoji: comment.emotion,
+        commentDate,
+        content: comment.comment,
       });
-      delete comment.author;
-      delete comment.comment;
-      delete comment.emotion;
-      updatedComment.push(comment);
+
+      delete adaptedComment.comment;
+      delete adaptedComment.emotion;
+      delete adaptedComment.date;
+
+      updatedComment.push(adaptedComment);
     });
+
+    const film = update.movie;
+    const filmDate = new Date(film.film_info.release.date);
+    const releaseDate = filmDate.getFullYear();
+    const releaseFullDate = `${filmDate.getDay() + 1} ${month[filmDate.getMonth()]} ${filmDate.getFullYear()}`;
+    const adaptedFilm = Object.assign({}, film, {
+      actors: film.film_info.actors,
+      category: film.film_info.age_rating,
+      name: film.film_info.title,
+      originTitle: film.film_info.alternative_title,
+      poster: film.film_info.poster,
+      description: film.film_info.description,
+      director: film.film_info.director,
+      genres: film.film_info.genre,
+      releaseDate,
+      releaseFullDate,
+      country: film.film_info.release.release_country,
+      runtime: film.film_info.runtime,
+      rating: film.film_info.total_rating,
+      writers: film.film_info.writers,
+      watchlist: film.user_details.watchlist,
+      watched: film.user_details.already_watched,
+      favorite: film.user_details.favorite,
+      watchedDate: film.user_details.watching_date,
+    });
+
+    delete adaptedFilm.film_info;
+    delete adaptedFilm.user_details;
+
+    return [adaptedFilm, updatedComment];
   }
 }

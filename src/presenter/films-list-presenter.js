@@ -40,6 +40,7 @@ export default class MovieList {
     this._countCardInPage = 5;
     this._commentsList = [];
     this._api = api;
+    this._updateCommentStatus = false;
   }
 
   init() {
@@ -146,7 +147,7 @@ export default class MovieList {
   }
 
   _setHendlersComment(comment, index) {
-    comment.setDeleteCommentHandler((evt) => this._removeFilmComment(evt, comment, index));
+    comment.setDeleteCommentHandler((evt) => this._removeFilmComment(evt, index));
     comment.setAddCommentHandler((evt) => this._addFilmComment(evt));
   }
 
@@ -218,7 +219,7 @@ export default class MovieList {
     }
   }
 
-  _removeFilmComment(evt, comment, index) {
+  _removeFilmComment(evt, index) {
     const deleteLink = evt.target;
     const commentElem = deleteLink.closest(`.film-details__comment`);
     const commentId = commentElem.getAttribute(`id`);
@@ -230,7 +231,7 @@ export default class MovieList {
     this._api.deleteComment(commentId).then((response) => {
       if (response.ok) {
         this._commentsList[index].deleteComment(commentId);
-        this._updateComment(index);
+        this._updateComment(this._commentsList[index].getComments(), index);
       }
     }).catch(() => {
       deleteLink.removeAttribute(`disabled`);
@@ -255,10 +256,14 @@ export default class MovieList {
     });
   }
 
-  _updateComment(index) {
+  _updateComment(comments, index) {
     remove(this._comments);
-    this._comments = new CommentsView(this._commentsList[index].getComments());
+    this._comments = new CommentsView(comments);
     render(this._filmDetails, this._comments, RenderPosition.BEFOREEND);
+    // if(this._updateCommentStatus) {
+    //   document.querySelector(`.film-details__comment-input`).setAttribute(`disabled`, `disabled`);
+    // }
+    this._comments.setDisabledForm()
     this._setHendlersComment(this._comments, index);
   }
 
@@ -266,7 +271,8 @@ export default class MovieList {
     const text = this._comments.getElement().querySelector(`.film-details__comment-input`);
     const emotions = document.querySelectorAll(`.film-details__emoji-item`);
     const submitForm = document.querySelector(`form.film-details__inner`);
-    text.setAttribute(`disabled`, `disabled`);
+    document.querySelector(`.film-details__comment-input`).setAttribute(`disabled`, `disabled`);
+    this._comments.setDisabledForm()
     if (submitForm.classList.contains(`shake`)) {
       submitForm.classList.remove(`shake`);
     }
@@ -278,21 +284,21 @@ export default class MovieList {
     }
     if (currentEmoji !== null && text) {
       let newComment = {
-        id: nanoid(),
         content: text.value,
         author: `I'm`,
         emoji: currentEmoji,
         commentDate: dayjs().format(),
       };
       const film = this._getFilms()[index];
-      this._api.addComment(newComment, film).then(() => {
-        this._commentsList[index].addComment(newComment);
-      }).then(() => {
-        this._updateComment(index);
+      this._api.addComment(newComment, film).then((data) => {
+        this._updateCommentStatus = true;
+        this._updateComment(data[1], index);
+        this._commentsList[index].setComments(data[1])
       }).catch(() => {
         submitForm.classList.add(`shake`);
       }).finally(() => {
-        text.removeAttribute(`disabled`);
+        this._updateCommentStatus = true;
+        document.querySelector(`.film-details__comment-input`).removeAttribute(`disabled`);
       });
     }
   }

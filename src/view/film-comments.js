@@ -115,4 +115,14 @@ export class Comments extends Smart {
       i.addEventListener(`change`, this._addCommentEmotion);
     }
   }
+
+  setDisabledForm(){
+    console.log("setDisabledForm", this.getElement().querySelector(`.film-details__comment-input`))
+    return this.getElement().querySelector(`.film-details__comment-input`).setAttribute(`disabled`, `disabled`);
+  }
+
+  removeDisabledForm(){
+    return this.getElement().querySelector(`.film-details__comment-input`).removeAttribute(`disabled`, `disabled`);
+  }
+
 }
