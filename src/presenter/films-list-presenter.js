@@ -198,23 +198,23 @@ export default class MovieList {
   }
 
   _handleFilterClick(evt) {
+    this._stats.hide();
+    this._buttonShowMore.hide();
     const typeFilter = evt.target.getAttribute(`data-filter`);
     if (this._typeFilter !== typeFilter) {
       this._typeFilter = typeFilter;
+      this._handleSortClick(evt);
+      this._stats.hide();
+      this._containerFilmsListComponent.show();
+      this._sortMenu.show();
+      this._buttonShowMore.show();
     }
     if (this._typeFilter === `stats`) {
       this._containerFilmsListComponent.hide();
       this._buttonShowMore.hide();
       this._sortMenu.hide();
       this._stats.show();
-    } else {
-      this._stats.hide();
-      this._containerFilmsListComponent.show();
-      this._sortMenu.show();
-      this._buttonShowMore.show();
     }
-    this._clearFilmList();
-    this.init();
   }
 
   _removeFilmComment(evt, comment, index) {
