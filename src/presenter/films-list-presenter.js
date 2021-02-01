@@ -64,24 +64,36 @@ export default class MovieList {
   }
 
   _renderFilmsList(start, end) {
-    for (let i = start; i < end; i++) {
-      this._cardFilmComponent = new FilmCardView(this._getFilms().slice()[i]);
+    for (let filmIndex = start; filmIndex < end; filmIndex++) {
       let commentsModel = new Comments();
-      commentsModel.setComments(this._getFilms().slice()[i].comments);
+      commentsModel.setComments(this._getFilms().slice()[filmIndex].comments);
       this._commentsList.push(commentsModel);
-      render(this._containerFilms, this._cardFilmComponent, RenderPosition.BEFOREEND);
-      this._cardFilmComponent.setClickHandler(() => this._showFilmDetails(i));
-      this._cardFilmComponent.setClickHandlerEditStatus((evt) => this._editFilm(evt, i));
+      let actualFilm = this._getFilms().slice()[filmIndex];
+      this._api.getComments(actualFilm.id).then((comments) => {
+        this._createCardFilmComponent(actualFilm, filmIndex, comments.length);
+      }).catch(() => {
+        this._createCardFilmComponent(actualFilm, filmIndex);
+      });
     }
   }
 
+  _createCardFilmComponent(actualFilm, filmIndex, commentsCount = 0) {
+    this._cardFilmComponent = new FilmCardView(actualFilm, commentsCount);
+    render(this._containerFilms, this._cardFilmComponent, RenderPosition.BEFOREEND);
+    this._cardFilmComponent.setClickHandler(() => this._showFilmDetails(filmIndex));
+    this._cardFilmComponent.setClickHandlerEditStatus((evt) => this._editFilm(evt, filmIndex));
+  }
+
   _renderFilmsBlock() {
+    this._countCardInPage = 5;
     const filmsCount = this._getFilms().slice().length;
     if (filmsCount > 0) {
       let countCardsForRender = null;
-      this._renderFilmsList(0, this._countCardInPage);
       if (filmsCount > this._countCardInPage) {
+        this._renderFilmsList(0, this._countCardInPage);
         this._renderShowButton();
+      } else {
+        this._renderFilmsList(0, filmsCount);
       }
       this._buttonShowMore.setClickHandler(() => {
         countCardsForRender = this._renderFilmsCount;
@@ -269,6 +281,8 @@ export default class MovieList {
       this._comments.setDisabledForm();
     }
     this._setHendlersComment(this._comments, index);
+    this._clearFilmList();
+    this.init();
   }
 
   submitComments(index) {

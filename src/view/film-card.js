@@ -2,7 +2,7 @@ import Abstract from "./abstract";
 import {timeFormatting} from "../utils/films";
 
 
-export const createFilmCard = (film) => {
+export const createFilmCard = (film, countComments) => {
   const setСlassActive = (status) => {
     return status ? `film-card__controls-item--active` : ``;
   };
@@ -18,7 +18,7 @@ export const createFilmCard = (film) => {
       </p>
       <img src="${film.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${film.description.slice(0, 65)}...</p>
-      <a class="film-card__comments">${film.comments.length} comments</a>
+      <a class="film-card__comments">${countComments} comments</a>
     </div>
     <div class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${setСlassActive(film.watchlist)}" type="button" name="watchlist">Add to watchlist</button>
@@ -30,15 +30,16 @@ export const createFilmCard = (film) => {
 };
 
 export class FilmCard extends Abstract {
-  constructor(film) {
+  constructor(film, countComments) {
     super();
     this._film = film;
+    this._countComments = countComments;
     this._clickHandler = this._clickHandler.bind(this);
     this._clickHandlerEditStatus = this._clickHandlerEditStatus.bind(this);
   }
 
   getTemplate() {
-    return createFilmCard(this._film);
+    return createFilmCard(this._film, this._countComments);
   }
 
   _clickHandler(evt) {
