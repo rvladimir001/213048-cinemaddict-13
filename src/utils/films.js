@@ -54,9 +54,9 @@ export const FilterType = {
 };
 
 export const timeFormatting = (time) => {
-  let h = Math.trunc(time / 60);
-  let m = time % 60;
-  return `${h} h ${m} m`;
+  let hours = Math.trunc(time / 60);
+  let minuts = time % 60;
+  return `${hours} h ${minuts} m`;
 };
 
 const UserStatus = {

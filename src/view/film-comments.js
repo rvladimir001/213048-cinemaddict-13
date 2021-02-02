@@ -94,7 +94,7 @@ export class Comments extends Smart {
 
   setDeleteCommentHandler(callback) {
     this._callback.removeClick = callback;
-    for (let link of this.getDeleteLinks()) {
+    for (const link of this.getDeleteLinks()) {
       link.addEventListener(`click`, this._deleteClickComment);
     }
   }
@@ -112,7 +112,7 @@ export class Comments extends Smart {
 
   setAddCommentHandler(callback) {
     this._callback.addClickEmotion = callback;
-    for (let i of this.getInputsEmoji()) {
+    for (const i of this.getInputsEmoji()) {
       i.addEventListener(`change`, this._addCommentEmotion);
     }
   }

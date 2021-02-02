@@ -116,7 +116,7 @@ export class FilmDetailsElement extends Smart {
   _clickHandlerEditStatus(evt) {
     evt.preventDefault();
     if (evt.target.tagName === `INPUT` || evt.target.tagName === `BUTTON`) {
-      let name = evt.target.getAttribute(`name`);
+      const name = evt.target.getAttribute(`name`);
       this._callback.editClick(evt, FilmDetailsElement.parseDataToFilm(this._film));
       this.updateData({
         [name]: !this._film[name],

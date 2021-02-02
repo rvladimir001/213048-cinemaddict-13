@@ -65,10 +65,10 @@ export default class MovieList {
 
   _renderFilmsList(start, end) {
     for (let filmIndex = start; filmIndex < end; filmIndex++) {
-      let commentsModel = new Comments();
+      const commentsModel = new Comments();
       commentsModel.setComments(this._getFilms().slice()[filmIndex].comments);
       this._commentsList.push(commentsModel);
-      let actualFilm = this._getFilms().slice()[filmIndex];
+      const actualFilm = this._getFilms().slice()[filmIndex];
       this._api.getComments(actualFilm.id).then((comments) => {
         this._createCardFilmComponent(actualFilm, filmIndex, comments.length);
       }).catch(() => {
@@ -169,7 +169,7 @@ export default class MovieList {
   }
 
   _editFilm(evt, index) {
-    let updatedFilm = Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]});
+    const updatedFilm = Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]});
     this._api.updateFilm(updatedFilm).then((update) => {
       this._filmsModel.updateFilm(update);
       this._clearFilmList();
@@ -294,13 +294,13 @@ export default class MovieList {
       submitForm.classList.remove(`shake`);
     }
     let currentEmoji;
-    for (let emotion of emotions) {
+    for (const emotion of emotions) {
       if (emotion.checked) {
         currentEmoji = emotion.value;
       }
     }
     if (currentEmoji !== null && text) {
-      let newComment = {
+      const newComment = {
         content: text.value,
         author: `I'm`,
         emoji: currentEmoji,
