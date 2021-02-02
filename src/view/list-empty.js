@@ -46,7 +46,7 @@ export default class ListEmpty extends Abstract {
 
   setClickHandler(callback) {
     this._callback.click = callback;
-    for (let link of this.getElement().querySelectorAll(`.main-navigation__items`)) {
+    for (const link of this.getElement().querySelectorAll(`.main-navigation__items`)) {
       link.addEventListener(`click`, this._clickHandler);
     }
     this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, this._clickHandler);
