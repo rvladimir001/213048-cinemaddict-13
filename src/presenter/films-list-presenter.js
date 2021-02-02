@@ -211,6 +211,7 @@ export default class MovieList {
       this._typeSort = typeSort;
     }
     this._clearFilmList();
+    remove(this._stats);
     this.init();
   }
 
