@@ -93,6 +93,7 @@ export default class MovieList {
         this._renderFilmsList(0, this._countCardInPage);
         this._renderShowButton();
       } else {
+        remove(this._buttonShowMore);
         this._renderFilmsList(0, filmsCount);
       }
       this._buttonShowMore.setClickHandler(() => {
@@ -211,6 +212,7 @@ export default class MovieList {
       this._typeSort = typeSort;
     }
     this._clearFilmList();
+    remove(this._stats);
     this.init();
   }
 
