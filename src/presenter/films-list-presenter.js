@@ -46,8 +46,8 @@ export default class MovieList {
 
   init() {
     this._renderFilter();
-    const watchedCount = this._filtersModel.getWatched(this._filmsModel.getFilms().slice()).length;
-    this._stats = new Stats(this._filmsModel.getFilms().slice(), `ALL_TIME`, profileRating(watchedCount));
+    const watchedCount = this._filtersModel.getWatched(this._getFilms().slice()).length;
+    this._stats = new Stats(this._getFilms().slice(), `ALL_TIME`, profileRating(watchedCount));
     render(this._container, this._stats, RenderPosition.BEFOREEND);
     this._stats.hide();
     this._renderSort();
@@ -170,7 +170,7 @@ export default class MovieList {
   _editFilm(evt, index) {
     const updatedFilm = Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]});
     this._api.updateFilm(updatedFilm).then((update) => {
-      this._filmsModel.updateFilm(update);
+      this._getFilms().updateFilm(update);
       this._clearFilmList();
       this.init();
       if (!this._filmDetailsStatus) {
@@ -241,14 +241,10 @@ export default class MovieList {
   }
 
   _removeFilmComment(evt, index) {
-    const deleteLink = evt.target;
-    const commentElem = deleteLink.closest(`.film-details__comment`);
-    const commentId = commentElem.getAttribute(`id`);
-    deleteLink.setAttribute(`disabled`, `disabled`);
-    deleteLink.textContent = `Deleting…`;
-    if (commentElem.classList.contains(`shake`)) {
-      commentElem.classList.remove(`shake`);
-    }
+    const commentId = this._comments.getCommentId(evt);
+    this._comments.setDisabledButton(evt, true);
+    this._comments.setTextButton(evt, `Deleting...`);
+    this._comments.removeShake(evt);
     this._api.deleteComment(commentId).then((response) => {
       if (response.ok) {
         this._commentsList[index].deleteComment(commentId);
@@ -257,10 +253,10 @@ export default class MovieList {
         this._sendCommentStatus = true;
       }
     }).catch(() => {
-      deleteLink.removeAttribute(`disabled`);
-      commentElem.classList.add(`shake`);
+      this._comments.setDisabledButton(evt, false);
+      this._comments.addShake(evt);
     }).finally(() => {
-      deleteLink.textContent = `Delete`;
+      this._comments.setTextButton(evt, `Delete`);
     });
   }
 

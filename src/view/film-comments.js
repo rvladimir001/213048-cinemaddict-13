@@ -132,5 +132,31 @@ export class Comments extends Smart {
   getEmojiValue() {
     return this.getElement().querySelectorAll(`.film-details__emoji-item`);
   }
+  getCommentId(evt){
+    return evt.target.closest(`.film-details__comment`).getAttribute(`id`)
+  }
 
+  setTextButton(evt, value){
+    evt.target.textContent = value;
+  }
+
+  setDisabledButton(evt, status){
+    if (status){
+      evt.target.setAttribute(`disabled`, `disabled`);
+    } else {
+      evt.target.removeAttribute(`disabled`);
+    }
+  }
+
+  removeShake(evt) {
+    const submitForm = evt.target.closest(`.film-details__comment`);;
+    if (submitForm.classList.contains(`shake`)) {
+      submitForm.classList.remove(`shake`);
+    }
+  }
+
+  addShake() {
+    const submitForm = evt.target.closest(`.film-details__comment`);;
+    submitForm.classList.add(`shake`);
+  }
 }
