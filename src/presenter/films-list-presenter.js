@@ -121,21 +121,21 @@ export default class MovieList {
   }
 
   _showFilmDetails(index) {
+    console.log("edit!", this._filmDetailsStatus);
     this._indexCurentFilm = index;
     if (this._countCardInPage !== 0) {
       this._renderFilmsCount = this._countCardInPage;
     }
     if (this._filmDetailsStatus) {
-      this._filmDetailsStatus = false;
       this._renderFilmDetails(index);
     } else {
-      this._filmDetailsStatus = false;
       remove(this._filmDetails);
       this._renderFilmDetails(index);
     }
   }
 
   _renderFilmDetails(index) {
+    this._filmDetailsStatus = false;
     this._comments = null;
     const currentFilm = this._getFilms().slice()[index];
     this._filmDetails = new FilmDetailsElementView(currentFilm);
@@ -174,6 +174,10 @@ export default class MovieList {
       this._filmsModel.updateFilm(update);
       this._clearFilmList();
       this.init();
+      if (!this._filmDetailsStatus) {
+        this._showFilmDetails(index);
+      }
+
     });
   }
 
