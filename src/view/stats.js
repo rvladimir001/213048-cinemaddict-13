@@ -199,10 +199,10 @@ export default class Stats extends Smart {
     }
     this._currentPeriod = newPeriod;
     const filteredFilms = getStatsDataForPeriod[this._currentPeriod](this._films);
-    this.updateStatsData({films: filteredFilms, currentPeriod: this._currentPeriod, user: this._user});
+    this._updateStatsData({films: filteredFilms, currentPeriod: this._currentPeriod, user: this._user});
   }
 
-  updateStatsData(date) {
+  _updateStatsData(date) {
     this._data = Object.assign({}, this._film, date);
     this.updateElement();
   }

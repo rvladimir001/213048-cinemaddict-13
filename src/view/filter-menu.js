@@ -1,6 +1,6 @@
 import Abstract from "./abstract";
 
-const createListEmptyTemplate = (watchlistCount, historyCount, favoritesCount) => {
+const createFilterMenuTemplate = (watchlistCount, historyCount, favoritesCount) => {
   return (
     `<nav class="main-navigation">
       <div class="main-navigation__items">
@@ -30,7 +30,7 @@ export default class FilterMenu extends Abstract {
   }
 
   getTemplate() {
-    return createListEmptyTemplate(this._watchlistCount, this._historyCount, this._favoritesCount);
+    return createFilterMenuTemplate(this._watchlistCount, this._historyCount, this._favoritesCount);
   }
 
   updateCountMenu() {

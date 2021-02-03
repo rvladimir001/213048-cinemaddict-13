@@ -52,10 +52,10 @@ export default class MovieList {
     this._renderFilter();
     const watchedCount = this._filtersModel.getWatched(this._getFilms().slice()).length;
     this._stats = new Stats(this._getFilms().slice(), `ALL_TIME`, profileRating(watchedCount));
-    this._headerProfile.setUserStatus(profileRating(watchedCount));
-    this._headerProfile.updateUserStatus();
     render(this._container, this._stats, RenderPosition.BEFOREEND);
     this._stats.hide();
+    this._headerProfile.setUserStatus(profileRating(watchedCount));
+    this._headerProfile.updateUserStatus();
     this._renderSort();
     render(this._container, this._containerFilmsListComponent, RenderPosition.BEFOREEND);
     this._containerFilms = this._container.querySelector(`.films-list__container`);
@@ -166,7 +166,7 @@ export default class MovieList {
     this._api.updateFilm(updatedFilm).then((update) => {
       this._filmsModel.updateFilm(update);
       this._clearFilmList();
-      this.init();
+      this._renderFilmsBlock();
       if (!this._filmDetailsStatus) {
         this._showFilmDetails(index);
       }
