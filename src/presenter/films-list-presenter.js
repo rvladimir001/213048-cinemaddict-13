@@ -39,7 +39,6 @@ export default class MovieList {
     this._countCardInPage = 5;
     this._commentsList = [];
     this._api = api;
-    this._updateCommentStatus = false;
     this._sendCommentStatus = true;
     this._comments = null;
     this._indexCurentFilm = null;
