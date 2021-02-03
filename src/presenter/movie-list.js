@@ -87,6 +87,7 @@ export default class MovieList {
 
   _renderFilmsBlock() {
     if (this._getFilms().slice().length > 0) {
+      this._buttonShowMore.show();
       if (this._getFilms().slice().length > this._countCardInPage) {
         this._renderFilmsList(0, this._countCardInPage);
         this._buttonShowMore.show();
@@ -173,6 +174,8 @@ export default class MovieList {
       const filmsSorted = filmsSort(this._filmsModel.getFilms());
       this._filterMenu.setCounts(filmsSorted.watchlist.length, filmsSorted.watched.length, filmsSorted.favorites.length);
       this._filterMenu.updateCountMenu();
+      this._headerProfile.setUserStatus(profileRating(this._filtersModel.getWatched(this._getFilms().slice()).length));
+      this._headerProfile.updateUserStatus();
     });
   }
 
