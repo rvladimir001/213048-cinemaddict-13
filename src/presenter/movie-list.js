@@ -6,7 +6,6 @@ import {FilmDetails as FilmDetailsElementView} from "../view/film-details";
 import {filmComments as CommentsView} from "../view/film-comments";
 import {
   closeFilmDetails,
-  closeFilmDetailsEsc,
   filmsSort, profileRating,
 } from "../utils/films";
 import SortMenu from "../view/sort-menu";
@@ -42,7 +41,8 @@ export default class MovieList {
     this._sendCommentStatus = true;
     this._comments = null;
     this._indexCurentFilm = null;
-    this.currentIndex = null;
+    this.addEventSubmit = this.addEventSubmit.bind(this);
+    this._closeEsc = this._closeEsc.bind(this)
   }
 
   init() {
@@ -147,14 +147,9 @@ export default class MovieList {
       .catch(() => {
         this._commentsList[index].setComments([]);
       });
-    this._filmDetails.getElement().addEventListener(`keydown`,  (evt)=>this.addEventSubmit(evt, index));
-
-
+    this._filmDetails.getElement().addEventListener(`keydown`, this.addEventSubmit);
     this._filmDetails.setClickHandler(() => this._close());
-
-    document.addEventListener(`keydown`, (evt) => {
-      this._closeEsc(evt);
-    });
+    document.addEventListener(`keydown`, this._closeEsc);
     this._filmDetails.setClickHandlerEditStatus((evt) => {
       this._editFilm(evt, index);
     });
@@ -180,13 +175,19 @@ export default class MovieList {
     });
   }
 
-  _close(evt, index) {
+  _close() {
     closeFilmDetails(this._filmDetails, this._containerFilms);
     this._filmDetailsStatus = true;
+    this._filmDetails.getElement().removeEventListener(`keydown`, this.addEventSubmit);
   }
 
   _closeEsc(evt) {
-    closeFilmDetailsEsc(evt, this._filmDetails);
+    if (evt.key === `Escape` || evt.code === `Escape`) {
+      evt.preventDefault();
+      closeFilmDetails(this._filmDetails);
+      this._filmDetails.getElement().removeEventListener(`keydown`, this.addEventSubmit);
+      document.removeEventListener(`keydown`, this._closeEsc);
+    }
     this._filmDetailsStatus = true;
   }
 
@@ -266,8 +267,9 @@ export default class MovieList {
     this._comments.renderEmoji(labelEmotion, emotion);
   }
 
-  addEventSubmit(event) {
-    if ((event.ctrlKey) && (event.code === `Enter`)) {
+  addEventSubmit(evt) {
+    console.log("addEventSubmit");
+    if ((evt.ctrlKey) && (evt.code === `Enter`)) {
       this.submitComments();
     }
   }

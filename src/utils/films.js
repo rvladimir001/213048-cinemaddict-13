@@ -9,16 +9,8 @@ export const filmsSort = (allFilmsForView) => {
 };
 
 export const closeFilmDetails = (filmDetails) => {
-  filmDetails.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, () => closeFilmDetails);
   remove(filmDetails);
   document.body.classList.remove(`hide-overflow`);
-};
-
-export const closeFilmDetailsEsc = (evt, filmDetails, siteBody) => {
-  if (evt.key === `Escape` || evt.code === `Escape`) {
-    evt.preventDefault();
-    closeFilmDetails(filmDetails, siteBody);
-  }
 };
 
 export const emoji = (emotion) => {

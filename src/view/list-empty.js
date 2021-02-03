@@ -37,7 +37,7 @@ export default class ListEmpty extends Abstract {
     this.getElement().querySelector(`a[data-filter="watchlist"] span`).textContent = this._watchlistCount;
     this.getElement().querySelector(`a[data-filter="history"] span`).textContent = this._historyCount;
     this.getElement().querySelector(`a[data-filter="favorites"] span`).textContent = this._favoritesCount;
-  };
+  }
 
   getActiveLink() {
     return super.getElement().querySelector(`.main-navigation__item--active`);
