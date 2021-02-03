@@ -62,7 +62,7 @@ export const timeFormatting = (time) => {
 const UserStatus = {
   NOVICE: `Novice`,
   FAN: `Fan`,
-  MOVIE_BAFF: `Movie Buff`,
+  MOVIE_BUFF: `Movie Buff`,
 };
 
 export const profileRating = (count) => {
@@ -71,7 +71,7 @@ export const profileRating = (count) => {
   } else if (count > 10 && count <= 20) {
     return UserStatus.FAN;
   } else {
-    return UserStatus.MOVIE_BAFF;
+    return UserStatus.MOVIE_BUFF;
   }
 };
 

@@ -2,12 +2,12 @@ import Smart from "./smart";
 import {timeFormatting} from "../utils/films";
 
 const createFilmDetailsElement = (film) => {
-  const createGenresTemlate = (genres) => {
-    let genresTemlate = ``;
+  const createGenresTemplate = (genres) => {
+    let genresTemplate = ``;
     for (const item of genres) {
-      genresTemlate += `<span class="film-details__genre">${item}</span>`;
+      genresTemplate += `<span class="film-details__genre">${item}</span>`;
     }
-    return genresTemlate;
+    return genresTemplate;
   };
   const setCheckboxStatus = (status) => {
     return status ? `checked` : ``;
@@ -62,7 +62,7 @@ const createFilmDetailsElement = (film) => {
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
                   <td class="film-details__cell">
-                    ${createGenresTemlate(film.genres)}
+                    ${createGenresTemplate(film.genres)}
                 </tr>
               </table>
               <p class="film-details__film-description">

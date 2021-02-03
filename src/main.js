@@ -21,7 +21,7 @@ const filmsModel = new Films();
 const filtersModel = new FiltersModel();
 
 
-const filmsPresentor = new MovieList(siteMainElement, filmsModel, filtersModel, api);
+const filmsPresenter = new MovieList(siteMainElement, filmsModel, filtersModel, api);
 api.getFilms().then((films) => {
   filmsModel.setFilms(films);
   const watchedCount = filtersModel.getWatched(filmsModel.getFilms().slice()).length;
@@ -29,4 +29,4 @@ api.getFilms().then((films) => {
   render(siteFooterStat, new FooterStat(films.length), RenderPosition.BEFOREEND);
 }).catch(() => {
   filmsModel.setFilms([]);
-}).finally(() => filmsPresentor.init());
+}).finally(() => filmsPresenter.init());
