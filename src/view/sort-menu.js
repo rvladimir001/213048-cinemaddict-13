@@ -31,6 +31,11 @@ export default class SortMenu extends Abstract {
     this._callback.click(evt);
   }
 
+  setDefault() {
+    this.getActiveLink().classList.remove(`sort__button--active`);
+    this.getElement().querySelector(`a[data-sort="default"]`).classList.add(`sort__button--active`);
+  }
+
   setClickHandler(callback) {
     this._callback.click = callback;
     for (const botton of this.getElement().querySelectorAll(`.sort__button`)) {

@@ -121,7 +121,6 @@ export default class MovieList {
   }
 
   _showFilmDetails(index) {
-    console.log("edit!", this._filmDetailsStatus);
     this._indexCurentFilm = index;
     if (this._countCardInPage !== 0) {
       this._renderFilmsCount = this._countCardInPage;
@@ -213,13 +212,16 @@ export default class MovieList {
     const typeSort = evt.target.getAttribute(`data-sort`);
     if (this._typeSort !== typeSort) {
       this._typeSort = typeSort;
+      this._clearFilmList();
+      remove(this._stats);
+      this._getFilms();
+      this._renderFilmsBlock();
     }
-    this._clearFilmList();
-    remove(this._stats);
-    this.init();
   }
 
   _handleFilterClick(evt) {
+    this._typeSort = `default`;
+    this._sortMenu.setDefault();
     this._stats.hide();
     this._buttonShowMore.hide();
     const typeFilter = evt.target.getAttribute(`data-filter`);
