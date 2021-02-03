@@ -68,11 +68,7 @@ export default class MovieList {
       commentsModel.setComments(this._getFilms().slice()[filmIndex].comments);
       this._commentsList.push(commentsModel);
       const actualFilm = this._getFilms().slice()[filmIndex];
-      this._api.getComments(actualFilm.id).then((comments) => {
-        this._createCardFilmComponent(actualFilm, filmIndex, comments.length);
-      }).catch(() => {
-        this._createCardFilmComponent(actualFilm, filmIndex);
-      });
+      this._createCardFilmComponent(actualFilm, filmIndex, this._getFilms().slice()[filmIndex].comments.length);
     }
   }
 
@@ -170,13 +166,12 @@ export default class MovieList {
   _editFilm(evt, index) {
     const updatedFilm = Object.assign({}, this._getFilms()[index], {[evt.target.name]: !this._getFilms()[index][evt.target.name]});
     this._api.updateFilm(updatedFilm).then((update) => {
-      this._getFilms().updateFilm(update);
+      this._filmsModel.updateFilm(update);
       this._clearFilmList();
       this.init();
       if (!this._filmDetailsStatus) {
         this._showFilmDetails(index);
       }
-
     });
   }
 
@@ -284,6 +279,8 @@ export default class MovieList {
     }
     this._setHendlersComment(this._comments, index);
     this._clearFilmList();
+    const upFilm = Object.assign({}, this._getFilms()[index], {[`comments`]: comments});
+    this._filmsModel.updateFilm(upFilm);
     this.init();
   }
 
