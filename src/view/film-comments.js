@@ -8,7 +8,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-export const createComments = (comments) => {
+const createComments = (comments) => {
   const createCommentTemplate = (commentsList) => {
     let commentTemplate = ``;
     for (const comment of commentsList) {

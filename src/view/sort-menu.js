@@ -1,6 +1,6 @@
 import Abstract from "./abstract";
 
-export const createSortTemplate = () => {
+const createSortTemplate = () => {
   return (
     `<ul class="sort">
       <li><a href="#" class="sort__button sort__button--active" data-sort="default">Sort by default</a></li>

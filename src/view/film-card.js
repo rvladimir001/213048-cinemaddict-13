@@ -2,7 +2,7 @@ import Abstract from "./abstract";
 import {timeFormatting} from "../utils/films";
 
 
-export const createFilmCard = (film, countComments) => {
+const createFilmCard = (film, countComments) => {
   const setClassActive = (status) => {
     return status ? `film-card__controls-item--active` : ``;
   };
