@@ -23,6 +23,7 @@ export default class MovieList {
     this._filmsModel = filmsModel;
     this._filtersModel = filtersModel;
     this._container = container;
+    this._originFilmCounForList = FILM_COUNT_FOR_LIST;
     this._renderFilmsCount = FILM_COUNT_FOR_LIST;
     this._containerFilmsListComponent = new FilmsContainer();
     this._containerFilms = null;
@@ -42,6 +43,7 @@ export default class MovieList {
     this._sendCommentStatus = true;
     this._comments = null;
     this._indexCurentFilm = null;
+    this._countFilmsForView = 0;
     this.addEventSubmit = this.addEventSubmit.bind(this);
     this._closeEsc = this._closeEsc.bind(this);
   }
@@ -57,7 +59,7 @@ export default class MovieList {
     this._renderSort();
     render(this._container, this._containerFilmsListComponent, RenderPosition.BEFOREEND);
     this._containerFilms = this._container.querySelector(`.films-list__container`);
-    this._countFilmsForView = 0;
+    this._renderShowButton();
     this._renderFilmsBlock();
   }
 
@@ -84,31 +86,31 @@ export default class MovieList {
   }
 
   _renderFilmsBlock() {
-    this._countCardInPage = 5;
-    const filmsCount = this._getFilms().slice().length;
-    if (filmsCount > 0) {
-      if (filmsCount > this._countCardInPage) {
+    if (this._getFilms().slice().length > 0) {
+      if (this._getFilms().slice().length > this._countCardInPage) {
         this._renderFilmsList(0, this._countCardInPage);
-        this._renderShowButton();
+        this._buttonShowMore.show();
       } else {
-        remove(this._buttonShowMore);
-        this._renderFilmsList(0, filmsCount);
+        this._buttonShowMore.hide();
+        this._renderFilmsList(0, this._getFilms().slice().length);
       }
     } else {
-      remove(this._buttonShowMore);
+      this._buttonShowMore.hide();
       this._renderNoMoviesBlock();
     }
-    this._buttonShowMore.setClickHandler(() => {
-      this._countFilmsForView = this._countFilmsForView + this._renderFilmsCount;
-      if (filmsCount - (this._countFilmsForView) < this._renderFilmsCount) {
-        this._renderFilmsCount = filmsCount - this._countFilmsForView;
-      }
-      this._renderFilmsList(this._countFilmsForView, this._countFilmsForView + this._renderFilmsCount);
-      this._countCardInPage += this._renderFilmsCount;
-      if (filmsCount === this._countCardInPage) {
-        remove(this._buttonShowMore);
-      }
-    });
+    this._buttonShowMore.setClickHandler(() => this._showMoreFilms());
+  }
+
+  _showMoreFilms() {
+    this._countFilmsForView = this._countFilmsForView + this._renderFilmsCount;
+    if (this._getFilms().slice().length - (this._countFilmsForView) < this._renderFilmsCount) {
+      this._renderFilmsCount = this._getFilms().slice().length - this._countFilmsForView;
+    }
+    this._renderFilmsList(this._countFilmsForView, this._countFilmsForView + this._renderFilmsCount);
+    this._countCardInPage += this._renderFilmsCount;
+    if (this._getFilms().slice().length === this._countCardInPage) {
+      this._buttonShowMore.hide();
+    }
   }
 
   _renderNoMoviesBlock() {
@@ -121,9 +123,6 @@ export default class MovieList {
 
   _showFilmDetails(index) {
     this._indexCurentFilm = index;
-    if (this._countCardInPage !== 0) {
-      this._renderFilmsCount = this._countCardInPage;
-    }
     if (this._filmDetailsStatus) {
       this._renderFilmDetails(index);
     } else {
@@ -135,7 +134,6 @@ export default class MovieList {
   _renderFilmDetails(index) {
     this._filmDetailsStatus = false;
     this._comments = null;
-    this.currentIndex = index;
     const currentFilm = this._getFilms().slice()[index];
     this._filmDetails = new FilmDetailsElementView(currentFilm);
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
@@ -223,6 +221,9 @@ export default class MovieList {
   }
 
   _handleFilterClick(evt) {
+    this._countCardInPage = 5;
+    this._countFilmsForView = 0;
+    this._renderFilmsCount = this._originFilmCounForList;
     this._typeSort = `default`;
     this._sortMenu.setDefault();
     this._stats.hide();
@@ -234,7 +235,6 @@ export default class MovieList {
       this._stats.hide();
       this._containerFilmsListComponent.show();
       this._sortMenu.show();
-      this._buttonShowMore.show();
     }
     if (this._typeFilter === `stats`) {
       this._containerFilmsListComponent.hide();
