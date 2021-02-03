@@ -66,7 +66,7 @@ export const createComments = (comments) => {
           </section>`;
 };
 
-export class Comments extends Smart {
+export class filmComments extends Smart {
   constructor(comments) {
     super();
     this._element = null;

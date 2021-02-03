@@ -85,12 +85,12 @@ const createFilmDetailsElement = (film) => {
   );
 };
 
-export class FilmDetailsElement extends Smart {
+export class FilmDetails extends Smart {
   constructor(film) {
     super();
     this._clickHandler = this._clickHandler.bind(this);
     this._clickHandlerEditStatus = this._clickHandlerEditStatus.bind(this);
-    this._film = FilmDetailsElement.parseFilmToData(film);
+    this._film = FilmDetails.parseFilmToData(film);
     document.body.classList.add(`hide-overflow`);
   }
 
@@ -117,7 +117,7 @@ export class FilmDetailsElement extends Smart {
     evt.preventDefault();
     if (evt.target.tagName === `INPUT` || evt.target.tagName === `BUTTON`) {
       const name = evt.target.getAttribute(`name`);
-      this._callback.editClick(evt, FilmDetailsElement.parseDataToFilm(this._film));
+      this._callback.editClick(evt, FilmDetails.parseDataToFilm(this._film));
       this.updateData({
         [name]: !this._film[name],
       });

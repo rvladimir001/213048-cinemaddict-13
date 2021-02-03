@@ -1,7 +1,7 @@
 import HeaderProfile from "./view/header-profile.js";
 import FooterStat from "./view/footer-stat.js";
 import {render, RenderPosition} from "./utils/render.js";
-import MovieList from "./presenter/films-list-presenter.js";
+import MovieList from "./presenter/movie-list.js";
 import Films from "./model/movies";
 import FiltersModel from "./model/filters";
 import Api from "./api.js";

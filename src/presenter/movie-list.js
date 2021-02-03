@@ -1,9 +1,9 @@
 import {remove, render, RenderPosition} from "../utils/render";
 import {ButtonShowMore as ButtonShowMoreView} from "../view/button-show-more";
-import {NoMoviesBlock as NoMoviesBlockView} from "../view/no-movies";
+import {NoMoviesBlock as NoMoviesBlockView} from "../view/no-movies-block";
 import {FilmCard as FilmCardView} from "../view/film-card";
-import {FilmDetailsElement as FilmDetailsElementView} from "../view/film-details";
-import {Comments as CommentsView} from "../view/film-comments";
+import {FilmDetails as FilmDetailsElementView} from "../view/film-details";
+import {filmComments as CommentsView} from "../view/film-comments";
 import {
   closeFilmDetails,
   closeFilmDetailsEsc,
