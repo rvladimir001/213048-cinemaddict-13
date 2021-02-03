@@ -2,8 +2,8 @@ import Abstract from "./abstract";
 import {timeFormatting} from "../utils/films";
 
 
-export const createFilmCard = (film, countComments) => {
-  const setСlassActive = (status) => {
+const createFilmCard = (film, countComments) => {
+  const setClassActive = (status) => {
     return status ? `film-card__controls-item--active` : ``;
   };
   return (
@@ -21,9 +21,9 @@ export const createFilmCard = (film, countComments) => {
       <a class="film-card__comments">${countComments} comments</a>
     </div>
     <div class="film-card__controls">
-    <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${setСlassActive(film.watchlist)}" type="button" name="watchlist">Add to watchlist</button>
-    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${setСlassActive(film.watched)}" type="button" name="watched">Mark as watched</button>
-    <button class="film-card__controls-item button film-card__controls-item--favorite ${setСlassActive(film.favorite)}" type="button" name="favorite">Mark as favorite</button>
+    <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${setClassActive(film.watchlist)}" type="button" name="watchlist">Add to watchlist</button>
+    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${setClassActive(film.watched)}" type="button" name="watched">Mark as watched</button>
+    <button class="film-card__controls-item button film-card__controls-item--favorite ${setClassActive(film.favorite)}" type="button" name="favorite">Mark as favorite</button>
     </div>
   </article>`
   );

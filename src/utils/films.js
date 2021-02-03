@@ -9,16 +9,8 @@ export const filmsSort = (allFilmsForView) => {
 };
 
 export const closeFilmDetails = (filmDetails) => {
-  filmDetails.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, () => closeFilmDetails);
   remove(filmDetails);
   document.body.classList.remove(`hide-overflow`);
-};
-
-export const closeFilmDetailsEsc = (evt, filmDetails, siteBody) => {
-  if (evt.key === `Escape` || evt.code === `Escape`) {
-    evt.preventDefault();
-    closeFilmDetails(filmDetails, siteBody);
-  }
 };
 
 export const emoji = (emotion) => {
@@ -39,13 +31,6 @@ export const createEmojiLabel = (emotion) => {
   return `<img src="./images/emoji/${emoji(emotion)}" width="55" height="55" alt="emoji-${emotion}">`;
 };
 
-export const UserAction = {
-  UPDATE_FILM: `UPDATE_FILM`,
-  ADD_COMMENT: `ADD_COMMENT`,
-  DELETE_COMMENT: `DELETE_COMMENT`,
-};
-
-
 export const FilterType = {
   ALL: `all`,
   WATCHLIST: `watchlist`,
@@ -62,7 +47,7 @@ export const timeFormatting = (time) => {
 const UserStatus = {
   NOVICE: `Novice`,
   FAN: `Fan`,
-  MOVIE_BAFF: `Movie Buff`,
+  MOVIE_BUFF: `Movie Buff`,
 };
 
 export const profileRating = (count) => {
@@ -71,7 +56,7 @@ export const profileRating = (count) => {
   } else if (count > 10 && count <= 20) {
     return UserStatus.FAN;
   } else {
-    return UserStatus.MOVIE_BAFF;
+    return UserStatus.MOVIE_BUFF;
   }
 };
 
@@ -85,6 +70,7 @@ export const month = [
   `July`,
   `August`,
   `September`,
+  `October`,
   `November`,
   `December`,
 ];

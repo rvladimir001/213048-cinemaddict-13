@@ -1,6 +1,6 @@
 import Abstract from "./abstract";
 
-export const createSortTemplate = () => {
+const createSortTemplate = () => {
   return (
     `<ul class="sort">
       <li><a href="#" class="sort__button sort__button--active" data-sort="default">Sort by default</a></li>
@@ -29,6 +29,11 @@ export default class SortMenu extends Abstract {
     this.getActiveLink().classList.remove(`sort__button--active`);
     evt.target.classList.add(`sort__button--active`);
     this._callback.click(evt);
+  }
+
+  setDefault() {
+    this.getActiveLink().classList.remove(`sort__button--active`);
+    this.getElement().querySelector(`a[data-sort="default"]`).classList.add(`sort__button--active`);
   }
 
   setClickHandler(callback) {

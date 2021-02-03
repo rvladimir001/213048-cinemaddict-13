@@ -12,10 +12,6 @@ export default class FiltersModel extends Observer {
     this._notify();
   }
 
-  getFilter() {
-    return this._filter;
-  }
-
   getWatched(films) {
     return films.filter((film) => film.watched);
   }
@@ -33,12 +29,16 @@ export default class FiltersModel extends Observer {
   }
 
   sortFilms(films, sortType) {
-    const filteredFilms = this.filterFilms(films);
+    const filteredFilms = this.filterFilms(films).slice();
     switch (sortType) {
+      case `default`:
+        return filteredFilms;
       case `rating`:
-        return filteredFilms.slice().sort((a, b) => a.rating > b.rating ? 1 : -1);
+        return filteredFilms.sort((a, b) => a.rating > b.rating ? 1 : -1);
       case `date`:
-        return filteredFilms.slice().sort((a, b) => a.releaseDate > b.releaseDate ? 1 : -1);
+        return filteredFilms.sort((a, b) => {
+          return +new Date(a.releaseFullDate) > +new Date(b.releaseFullDate) ? 1 : -1;
+        });
     }
     return filteredFilms;
   }

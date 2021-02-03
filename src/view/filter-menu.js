@@ -1,12 +1,12 @@
 import Abstract from "./abstract";
 
-const createListEmptyTemplate = (watchlistCount, HistoryCount, favoritesCount) => {
+const createFilterMenuTemplate = (watchlistCount, historyCount, favoritesCount) => {
   return (
     `<nav class="main-navigation">
       <div class="main-navigation__items">
         <a href="#all" class="main-navigation__item main-navigation__item--active" data-filter="all">All movies</a>
         <a href="#watchlist" class="main-navigation__item" data-filter="watchlist">Watchlist <span class="main-navigation__item-count">${watchlistCount}</span></a>
-        <a href="#history" class="main-navigation__item" data-filter="history">History <span class="main-navigation__item-count">${HistoryCount}</span></a>
+        <a href="#history" class="main-navigation__item" data-filter="history">History <span class="main-navigation__item-count">${historyCount}</span></a>
         <a href="#favorites" class="main-navigation__item" data-filter="favorites">Favorites <span class="main-navigation__item-count">${favoritesCount}</span></a>
       </div>
       <a href="#stats" class="main-navigation__additional" data-filter="stats">Stats</a>
@@ -14,23 +14,29 @@ const createListEmptyTemplate = (watchlistCount, HistoryCount, favoritesCount) =
   );
 };
 
-export default class ListEmpty extends Abstract {
+export default class FilterMenu extends Abstract {
   constructor() {
     super();
     this._watchlistCount = 0;
-    this._HistoryCount = 0;
+    this._historyCount = 0;
     this._favoritesCount = 0;
     this._clickHandler = this._clickHandler.bind(this);
   }
 
-  setCounts(watchlistCount, HistoryCount, favoritesCount) {
+  setCounts(watchlistCount, historyCount, favoritesCount) {
     this._watchlistCount = watchlistCount;
-    this._HistoryCount = HistoryCount;
+    this._historyCount = historyCount;
     this._favoritesCount = favoritesCount;
   }
 
   getTemplate() {
-    return createListEmptyTemplate(this._watchlistCount, this._HistoryCount, this._favoritesCount);
+    return createFilterMenuTemplate(this._watchlistCount, this._historyCount, this._favoritesCount);
+  }
+
+  updateCountMenu() {
+    this.getElement().querySelector(`a[data-filter="watchlist"] span`).textContent = this._watchlistCount;
+    this.getElement().querySelector(`a[data-filter="history"] span`).textContent = this._historyCount;
+    this.getElement().querySelector(`a[data-filter="favorites"] span`).textContent = this._favoritesCount;
   }
 
   getActiveLink() {
