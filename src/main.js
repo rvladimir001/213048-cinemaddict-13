@@ -5,7 +5,6 @@ import MovieList from "./presenter/movie-list.js";
 import Films from "./model/films";
 import FiltersModel from "./model/filters";
 import Api from "./api.js";
-import {profileRating} from "./utils/films";
 
 const AUTHORIZATION = `Basic eo0w590ik29889aqw`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
@@ -19,13 +18,13 @@ const siteFooterStat = siteFooterElement.querySelector(`.footer__statistics`);
 
 const filmsModel = new Films();
 const filtersModel = new FiltersModel();
+const headerProfile = new HeaderProfile();
+const filmsPresenter = new MovieList(siteMainElement, filmsModel, filtersModel, api, headerProfile);
 
+render(siteHeaderElement, headerProfile, RenderPosition.BEFOREEND);
 
-const filmsPresenter = new MovieList(siteMainElement, filmsModel, filtersModel, api);
 api.getFilms().then((films) => {
   filmsModel.setFilms(films);
-  const watchedCount = filtersModel.getWatched(filmsModel.getFilms().slice()).length;
-  render(siteHeaderElement, new HeaderProfile(profileRating(watchedCount)), RenderPosition.BEFOREEND);
   render(siteFooterStat, new FooterStat(films.length), RenderPosition.BEFOREEND);
 }).catch(() => {
   filmsModel.setFilms([]);

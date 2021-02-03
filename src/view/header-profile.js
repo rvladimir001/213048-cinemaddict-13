@@ -10,13 +10,20 @@ const createHeaderProfileTemplate = (userStatus) => {
 };
 
 export default class HeaderProfile extends Abstract {
-  constructor(userStatus) {
+  constructor() {
     super();
-    this._userStatus = userStatus;
-
+    this._userStatus = `Novice`;
   }
 
   getTemplate() {
     return createHeaderProfileTemplate(this._userStatus);
+  }
+
+  setUserStatus(userStatus) {
+    this._userStatus = userStatus;
+  }
+
+  updateUserStatus() {
+    this.getElement().querySelector(`.profile__rating`).textContent = this._userStatus;
   }
 }

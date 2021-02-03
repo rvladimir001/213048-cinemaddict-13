@@ -11,7 +11,7 @@ import {
 import SortMenu from "../view/sort-menu";
 import FilmsContainer from "../view/films-container";
 import Comments from "../model/comments";
-import ListEmpty from "../view/list-empty";
+import FilterMenu from "../view/filter-menu";
 import Stats from "../view/stats";
 import dayjs from "dayjs";
 
@@ -19,7 +19,7 @@ import dayjs from "dayjs";
 const FILM_COUNT_FOR_LIST = 5;
 
 export default class MovieList {
-  constructor(container, filmsModel, filtersModel, api) {
+  constructor(container, filmsModel, filtersModel, api, headerProfile) {
     this._filmsModel = filmsModel;
     this._filtersModel = filtersModel;
     this._container = container;
@@ -27,9 +27,10 @@ export default class MovieList {
     this._containerFilmsListComponent = new FilmsContainer();
     this._containerFilms = null;
     this._sortMenu = new SortMenu();
-    this._filterMenu = new ListEmpty();
+    this._filterMenu = new FilterMenu();
     this._buttonShowMore = new ButtonShowMoreView();
     this._nomovies = new NoMoviesBlockView();
+    this._headerProfile = headerProfile;
     this._stats = null;
     this._filmDetailsStatus = true;
     this._filmDetails = null;
@@ -42,13 +43,15 @@ export default class MovieList {
     this._comments = null;
     this._indexCurentFilm = null;
     this.addEventSubmit = this.addEventSubmit.bind(this);
-    this._closeEsc = this._closeEsc.bind(this)
+    this._closeEsc = this._closeEsc.bind(this);
   }
 
   init() {
     this._renderFilter();
     const watchedCount = this._filtersModel.getWatched(this._getFilms().slice()).length;
     this._stats = new Stats(this._getFilms().slice(), `ALL_TIME`, profileRating(watchedCount));
+    this._headerProfile.setUserStatus(profileRating(watchedCount));
+    this._headerProfile.updateUserStatus();
     render(this._container, this._stats, RenderPosition.BEFOREEND);
     this._stats.hide();
     this._renderSort();
@@ -268,7 +271,6 @@ export default class MovieList {
   }
 
   addEventSubmit(evt) {
-    console.log("addEventSubmit");
     if ((evt.ctrlKey) && (evt.code === `Enter`)) {
       this.submitComments();
     }

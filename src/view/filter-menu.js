@@ -14,7 +14,7 @@ const createListEmptyTemplate = (watchlistCount, historyCount, favoritesCount) =
   );
 };
 
-export default class ListEmpty extends Abstract {
+export default class FilterMenu extends Abstract {
   constructor() {
     super();
     this._watchlistCount = 0;
