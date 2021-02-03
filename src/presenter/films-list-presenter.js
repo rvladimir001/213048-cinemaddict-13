@@ -82,8 +82,8 @@ export default class MovieList {
   _renderFilmsBlock() {
     this._countCardInPage = 5;
     const filmsCount = this._getFilms().slice().length;
+    let countCardsForRender = null;
     if (filmsCount > 0) {
-      let countCardsForRender = null;
       if (filmsCount > this._countCardInPage) {
         this._renderFilmsList(0, this._countCardInPage);
         this._renderShowButton();
@@ -91,21 +91,21 @@ export default class MovieList {
         remove(this._buttonShowMore);
         this._renderFilmsList(0, filmsCount);
       }
-      this._buttonShowMore.setClickHandler(() => {
-        countCardsForRender = this._renderFilmsCount;
-        this._countFilmsForView = this._countFilmsForView + countCardsForRender;
-        if (filmsCount - (this._countFilmsForView) < this._renderFilmsCount) {
-          countCardsForRender = filmsCount - this._countFilmsForView;
-        }
-        this._renderFilmsList(this._countFilmsForView, this._countFilmsForView + countCardsForRender);
-        this._countCardInPage += countCardsForRender;
-        if (filmsCount === this._countCardInPage) {
-          remove(this._buttonShowMore);
-        }
-      });
     } else {
       this._renderNoMoviesBlock();
     }
+    this._buttonShowMore.setClickHandler(() => {
+      countCardsForRender = this._renderFilmsCount;
+      this._countFilmsForView = this._countFilmsForView + countCardsForRender;
+      if (filmsCount - (this._countFilmsForView) < this._renderFilmsCount) {
+        countCardsForRender = filmsCount - this._countFilmsForView;
+      }
+      this._renderFilmsList(this._countFilmsForView, this._countFilmsForView + countCardsForRender);
+      this._countCardInPage += countCardsForRender;
+      if (filmsCount === this._countCardInPage) {
+        remove(this._buttonShowMore);
+      }
+    });
   }
 
   _renderNoMoviesBlock() {
@@ -172,6 +172,7 @@ export default class MovieList {
       if (!this._filmDetailsStatus) {
         this._showFilmDetails(index);
       }
+      this._filterMenu.updateCountMenu();
     });
   }
 
@@ -208,7 +209,7 @@ export default class MovieList {
     if (this._typeSort !== typeSort) {
       this._typeSort = typeSort;
       this._clearFilmList();
-      remove(this._stats);
+      this._stats.hide();
       this._renderFilmsBlock();
     }
   }
