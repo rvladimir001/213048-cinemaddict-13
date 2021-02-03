@@ -42,6 +42,7 @@ export default class MovieList {
     this._sendCommentStatus = true;
     this._comments = null;
     this._indexCurentFilm = null;
+    this.currentIndex = null;
   }
 
   init() {
@@ -82,7 +83,6 @@ export default class MovieList {
   _renderFilmsBlock() {
     this._countCardInPage = 5;
     const filmsCount = this._getFilms().slice().length;
-    let countCardsForRender = null;
     if (filmsCount > 0) {
       if (filmsCount > this._countCardInPage) {
         this._renderFilmsList(0, this._countCardInPage);
@@ -96,13 +96,12 @@ export default class MovieList {
       this._renderNoMoviesBlock();
     }
     this._buttonShowMore.setClickHandler(() => {
-      countCardsForRender = this._renderFilmsCount;
-      this._countFilmsForView = this._countFilmsForView + countCardsForRender;
+      this._countFilmsForView = this._countFilmsForView + this._renderFilmsCount;
       if (filmsCount - (this._countFilmsForView) < this._renderFilmsCount) {
-        countCardsForRender = filmsCount - this._countFilmsForView;
+        this._renderFilmsCount = filmsCount - this._countFilmsForView;
       }
-      this._renderFilmsList(this._countFilmsForView, this._countFilmsForView + countCardsForRender);
-      this._countCardInPage += countCardsForRender;
+      this._renderFilmsList(this._countFilmsForView, this._countFilmsForView + this._renderFilmsCount);
+      this._countCardInPage += this._renderFilmsCount;
       if (filmsCount === this._countCardInPage) {
         remove(this._buttonShowMore);
       }
@@ -133,6 +132,7 @@ export default class MovieList {
   _renderFilmDetails(index) {
     this._filmDetailsStatus = false;
     this._comments = null;
+    this.currentIndex = index;
     const currentFilm = this._getFilms().slice()[index];
     this._filmDetails = new FilmDetailsElementView(currentFilm);
     render(document.body, this._filmDetails, RenderPosition.BEFOREEND);
@@ -147,10 +147,11 @@ export default class MovieList {
       .catch(() => {
         this._commentsList[index].setComments([]);
       });
-    document.addEventListener(`keydown`, (evt) => {
-      this.addEventSubmit(evt, index);
-    });
+    this._filmDetails.getElement().addEventListener(`keydown`,  (evt)=>this.addEventSubmit(evt, index));
+
+
     this._filmDetails.setClickHandler(() => this._close());
+
     document.addEventListener(`keydown`, (evt) => {
       this._closeEsc(evt);
     });
@@ -179,7 +180,7 @@ export default class MovieList {
     });
   }
 
-  _close() {
+  _close(evt, index) {
     closeFilmDetails(this._filmDetails, this._containerFilms);
     this._filmDetailsStatus = true;
   }
@@ -265,12 +266,10 @@ export default class MovieList {
     this._comments.renderEmoji(labelEmotion, emotion);
   }
 
-  addEventSubmit(evt, index) {
-    if ((evt.ctrlKey) && (evt.code === `Enter`)) {
-      evt.preventDefault();
-      this.submitComments(index);
+  addEventSubmit(event) {
+    if ((event.ctrlKey) && (event.code === `Enter`)) {
+      this.submitComments();
     }
-    document.removeEventListener(`keydown`, this.addEventSubmit);
   }
 
   _updateComment(comments, index) {
@@ -288,7 +287,7 @@ export default class MovieList {
     this.init();
   }
 
-  submitComments(index) {
+  submitComments() {
     const text = this._comments.getCommentValue();
     const emotions = this._comments.getEmojiValue();
     this._filmDetails.removeShakeForm();
@@ -309,8 +308,8 @@ export default class MovieList {
       if (this._sendCommentStatus) {
         this._sendCommentStatus = false;
         this._api.addComment(newComment, film).then((data) => {
-          this._updateComment(data[1], index);
-          this._commentsList[index].setComments(data[1]);
+          this._updateComment(data[1], this._indexCurentFilm);
+          this._commentsList[this._indexCurentFilm].setComments(data[1]);
         }).catch(() => {
           this._filmDetails.addShakeForm();
         }).finally(() => {
