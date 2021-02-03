@@ -35,8 +35,12 @@ export default class FiltersModel extends Observer {
   sortFilms(films, sortType) {
     const filteredFilms = this.filterFilms(films).slice();
     switch (sortType) {
+      case `default`:
+        return filteredFilms;
       case `rating`:
-        return filteredFilms.sort((a, b) => +a.rating > +b.rating ? 1 : -1);
+        return filteredFilms.sort((a, b) => {
+          return a.rating > b.rating ? 1 : -1;
+        });
       case `date`:
         return filteredFilms.sort((a, b) => {
           return +new Date(a.releaseFullDate) > +new Date(b.releaseFullDate) ? 1 : -1;

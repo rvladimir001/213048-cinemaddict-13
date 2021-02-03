@@ -214,7 +214,6 @@ export default class MovieList {
       this._typeSort = typeSort;
       this._clearFilmList();
       remove(this._stats);
-      this._getFilms();
       this._renderFilmsBlock();
     }
   }
@@ -293,13 +292,9 @@ export default class MovieList {
   }
 
   submitComments(index) {
-    const text = this._comments.getElement().querySelector(`.film-details__comment-input`);
-    const emotions = document.querySelectorAll(`.film-details__emoji-item`);
-    const submitForm = document.querySelector(`form.film-details__inner`);
-    this._comments.setDisabledForm();
-    if (submitForm.classList.contains(`shake`)) {
-      submitForm.classList.remove(`shake`);
-    }
+    const text = this._comments.getCommentValue();
+    const emotions = this._comments.getEmojiValue();
+    this._filmDetails.removeShakeForm();
     let currentEmoji;
     for (const emotion of emotions) {
       if (emotion.checked) {
@@ -320,7 +315,7 @@ export default class MovieList {
           this._updateComment(data[1], index);
           this._commentsList[index].setComments(data[1]);
         }).catch(() => {
-          submitForm.classList.add(`shake`);
+          this._filmDetails.addShakeForm();
         }).finally(() => {
           this._sendCommentStatus = true;
           this._comments.removeDisabledForm();

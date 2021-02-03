@@ -144,4 +144,16 @@ export class FilmDetailsElement extends Smart {
     delete data.watchlist;
     return data;
   }
+
+  removeShakeForm() {
+    const submitForm = this.getElement().querySelector(`.film-details__inner`);
+    if (submitForm.classList.contains(`shake`)) {
+      submitForm.classList.remove(`shake`);
+    }
+  }
+
+  addShakeForm() {
+    const submitForm = this.getElement().querySelector(`.film-details__inner`);
+    submitForm.classList.add(`shake`);
+  }
 }

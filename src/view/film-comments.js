@@ -125,4 +125,12 @@ export class Comments extends Smart {
     return this.getElement().querySelector(`.film-details__comment-input`).removeAttribute(`disabled`, `disabled`);
   }
 
+  getCommentValue() {
+    return this.getElement().querySelector(`.film-details__comment-input`);
+  }
+
+  getEmojiValue() {
+    return this.getElement().querySelectorAll(`.film-details__emoji-item`);
+  }
+
 }
