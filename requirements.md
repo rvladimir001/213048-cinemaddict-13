@@ -25,5 +25,3 @@ npm i eslint@7.13.0 -DE
 * webpack-dev-server@3.11.0
 * css-loader@5.0.1
 * style-loader@2.0.0
-
-## Еще один заголовок
